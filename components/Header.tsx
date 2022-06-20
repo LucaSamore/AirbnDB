@@ -22,13 +22,13 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2 p-2">
                 <Link href="/register">
-                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500">
+                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm">
                         Registrati
                     </button>
                 </Link>
 
                 <Link href="/login">
-                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500">
+                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm">
                         Accedi
                     </button>
                 </Link>
