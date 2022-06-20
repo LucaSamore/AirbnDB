@@ -8,6 +8,11 @@ module.exports = {
       fontFamily: {
         quicksand: ["Quicksand", "sans-serif"],
       },
+      colors: {
+        transparent: 'transparent',
+        current: 'currentColor',
+        'dark-mode-2': '#252526'
+      },
     },
   },
   plugins: [],

@@ -5,7 +5,7 @@ import { SearchIcon } from "@heroicons/react/solid"
 
 const Header: React.FC = () => {
     return (
-        <header className="flex justify-between items-center py-5 px-10 bg-gray-800">
+        <header className="flex justify-between items-center py-5 px-10 bg-dark-mode-2">
             <Link href="/">
                 <div className="relative flex items-center h-10 cursor-pointer my-auto">
                     <Image 
