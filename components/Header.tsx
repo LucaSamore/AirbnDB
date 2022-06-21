@@ -7,7 +7,7 @@ const Header: React.FC = () => {
     return (
         <header className="flex justify-between items-center py-5 px-10 bg-dark-mode-2">
             <Link href="/">
-                <div className="relative flex items-center h-10 cursor-pointer my-auto">
+                <div className="relative flex items-center h-10 cursor-pointer my-auto transition ease-in-out delay-250 hover:scale-110">
                     <Image 
                         src="/logo.svg" 
                         width={100} 
@@ -22,13 +22,13 @@ const Header: React.FC = () => {
             </div>
             <div className="flex items-center space-x-2 p-2">
                 <Link href="/register">
-                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm">
+                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm transition ease-in-out delay-250 hover:scale-110">
                         Registrati
                     </button>
                 </Link>
 
                 <Link href="/login">
-                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm">
+                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm transition ease-in-out delay-250 hover:scale-110">
                         Accedi
                     </button>
                 </Link>
