@@ -1,11 +1,247 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model alloggi {
+  Codice            Int            @id @default(autoincrement())
+  Tipologia         String         @db.VarChar(100)
+  NumeroOspitabili  Int            @db.TinyInt
+  NumeroBagni       Int            @db.TinyInt
+  NumeroCamereLetto Int            @db.TinyInt
+  NumeroLetti       Int            @db.TinyInt
+  annunci           annunci?
+  luoghi            luoghi?
+  possedimenti      possedimenti[]
+}
+
+model annunci {
+  CodiceAlloggio  Int               @id @default(autoincrement())
+  Titolo          String            @db.VarChar(100)
+  Descrizione     String            @db.Text
+  Disponibile     Boolean           @db.Bit(1)
+  PrezzoPerNotte  Decimal           @db.Decimal(8, 2)
+  CostoServizio   Decimal           @db.Decimal(6, 2)
+  CostoPulizia    Decimal           @db.Decimal(6, 2)
+  Tasse           Decimal           @db.Decimal(6, 2)
+  alloggi         alloggi           @relation(fields: [CodiceAlloggio], references: [Codice], onDelete: Cascade, onUpdate: NoAction, map: "FK_Codice_Alloggio")
+  annunci_regole  annunci_regole[]
+  annunci_servizi annunci_servizi[]
+  immagini        immagini[]
+  prenotazioni    prenotazioni[]
+  recensioni      recensioni[]
+}
+
+model annunci_regole {
+  CodiceAnnuncio Int
+  CodiceRegola   Int
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio_Regola")
+  regole         regole  @relation(fields: [CodiceRegola], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Regola")
+
+  @@id([CodiceAnnuncio, CodiceRegola])
+  @@index([CodiceRegola], map: "FK_Codice_Regola_idx")
+}
+
+model annunci_servizi {
+  CodiceAnnuncio Int
+  NomeServizio   String  @db.VarChar(100)
+  Incluso        Boolean @db.Bit(1)
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio_Servizio")
+  servizi        servizi @relation(fields: [NomeServizio], references: [Nome], onDelete: NoAction, onUpdate: NoAction, map: "FK_Nome_Servizio_Annuncio")
+
+  @@id([CodiceAnnuncio, NomeServizio])
+  @@index([NomeServizio], map: "FK_Nome_Servizio_Annuncio_idx")
+}
+
+model citta {
+  Nome   String   @id @db.VarChar(50)
+  luoghi luoghi[]
+}
+
+model clienti {
+  Codice                           String         @id @db.VarChar(255)
+  Nome                             String         @db.VarChar(50)
+  Cognome                          String         @db.VarChar(50)
+  DataNascita                      DateTime       @db.Date
+  DataCreazione                    DateTime       @db.DateTime(0)
+  Email                            String         @db.VarChar(255)
+  Password                         String         @db.Char(60)
+  Telefono                         String?        @db.Char(13)
+  CodiceHost                       String?        @db.VarChar(255)
+  host_clienti_CodiceHostTohost    host?          @relation("clienti_CodiceHostTohost", fields: [CodiceHost], references: [CodiceCliente], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Host")
+  host_clientiTohost_CodiceCliente host?          @relation("clientiTohost_CodiceCliente")
+  messaggi                         messaggi[]
+  prenotazioni                     prenotazioni[]
+
+  @@index([CodiceHost], map: "FK_Codice_Host_idx")
+}
+
+model host {
+  CodiceCliente                       String         @id @db.VarChar(255)
+  Biografia                           String?        @db.Text
+  CoordinateBancarie                  String         @db.VarChar(255)
+  CodiceDocumento                     String         @db.VarChar(100)
+  TipologiaDocumento                  String         @db.VarChar(100)
+  DataScadenzaDocumento               DateTime       @db.Date
+  clienti_clientiTohost_CodiceCliente clienti        @relation("clientiTohost_CodiceCliente", fields: [CodiceCliente], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Cliente_Host")
+  clienti_clienti_CodiceHostTohost    clienti[]      @relation("clienti_CodiceHostTohost")
+  host_lingue                         host_lingue[]
+  messaggi                            messaggi[]
+  possedimenti                        possedimenti[]
+  transazioni                         transazioni[]
+}
+
+model host_lingue {
+  CodiceHost String @db.VarChar(255)
+  Lingua     String @db.VarChar(50)
+  host       host   @relation(fields: [CodiceHost], references: [CodiceCliente], onDelete: NoAction, onUpdate: NoAction, map: "FK_Host_Lingue_Host")
+  lingue     lingue @relation(fields: [Lingua], references: [Nome], onDelete: NoAction, onUpdate: NoAction, map: "FK_Host_Lingue_Lingue")
+
+  @@id([CodiceHost, Lingua])
+  @@index([Lingua], map: "FK_Host_Lingue_Lingue_idx")
+}
+
+model immagini {
+  Codice         Int     @id @default(autoincrement())
+  Percorso       String  @db.Text
+  CodiceAnnuncio Int
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio")
+
+  @@index([CodiceAnnuncio], map: "FK_Codice_Annuncio_idx")
+}
+
+model lingue {
+  Nome        String        @id @db.VarChar(50)
+  host_lingue host_lingue[]
+}
+
+model luoghi {
+  CodiceAlloggio Int     @id
+  Via            String  @db.VarChar(100)
+  Civico         Int
+  CAP            String  @db.VarChar(16)
+  Citta          String  @db.VarChar(50)
+  Stato          String  @db.VarChar(50)
+  citta          citta   @relation(fields: [Citta], references: [Nome], onDelete: NoAction, onUpdate: NoAction, map: "FK_Luogo_Citta")
+  alloggi        alloggi @relation(fields: [CodiceAlloggio], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Alloggio_Luogo")
+  stati          stati   @relation(fields: [Stato], references: [Nome], onDelete: NoAction, onUpdate: NoAction, map: "FK_Luogo_Stato")
+
+  @@index([Citta], map: "FK_Luogo_Citta_idx")
+  @@index([Stato], map: "FK_Luogo_Stato_idx")
+}
+
+model messaggi {
+  Codice    Int      @id @default(autoincrement())
+  Contenuto String   @db.Text
+  DataOra   DateTime @db.DateTime(0)
+  Cliente   String   @db.VarChar(255)
+  Host      String   @db.VarChar(255)
+  clienti   clienti  @relation(fields: [Cliente], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Messaggio_Cliente")
+  host      host     @relation(fields: [Host], references: [CodiceCliente], onDelete: NoAction, onUpdate: NoAction, map: "FK_Messaggio_Host")
+
+  @@index([Cliente], map: "FK_Messaggio_Cliente_idx")
+  @@index([Host], map: "FK_Messaggio_Host_idx")
+}
+
+model metodi_pagamento {
+  Metodo      String        @id @db.VarChar(50)
+  transazioni transazioni[]
+}
+
+model possedimenti {
+  CodiceAlloggio Int
+  CodiceHost     String  @db.VarChar(255)
+  alloggi        alloggi @relation(fields: [CodiceAlloggio], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Possedimenti_Alloggio")
+  host           host    @relation(fields: [CodiceHost], references: [CodiceCliente], onDelete: NoAction, onUpdate: NoAction, map: "FK_Possedimenti_Host")
+
+  @@id([CodiceAlloggio, CodiceHost])
+  @@index([CodiceHost], map: "FK_Possedimenti_Host_idx")
+}
+
+model prenotazioni {
+  Codice              Int           @id @default(autoincrement())
+  DataInizioSoggiorno DateTime      @db.Date
+  DataFineSoggiorno   DateTime      @db.Date
+  NumeroAdulti        Int           @db.TinyInt
+  NumeroBambini       Int           @db.TinyInt
+  NumeroNeonati       Int           @db.TinyInt
+  NumeroAnimali       Int           @db.TinyInt
+  CodiceCliente       String        @db.VarChar(255)
+  CodiceAnnuncio      Int
+  annunci             annunci       @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Prenotazione_Annuncio")
+  clienti             clienti       @relation(fields: [CodiceCliente], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Prenotazione_Cliente")
+  recensioni          recensioni?
+  transazioni         transazioni[]
+
+  @@index([CodiceAnnuncio], map: "FK_Prenotazione_Annuncio_idx")
+  @@index([CodiceCliente], map: "FK_Prenotazione_Cliente_idx")
+}
+
+model recensioni {
+  CodicePrenotazione Int          @id
+  Descrizione        String       @db.Text
+  VotoPrecisione     Int
+  VotoComunicazione  Int
+  VotoPosizione      Int
+  VotoQualitaPrezzo  Int
+  VotoCheckIn        Int
+  VotoPulizia        Int
+  CodiceAnnuncio     Int
+  annunci            annunci      @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Recensione_Annuncio")
+  prenotazioni       prenotazioni @relation(fields: [CodicePrenotazione], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Recensione_Prenotazione")
+
+  @@index([CodiceAnnuncio], map: "FK_Recensione_Annuncio_idx")
+}
+
+model regole {
+  Codice           Int              @id @default(autoincrement())
+  Descrizione      String           @db.VarChar(100)
+  Tipologia        String           @db.VarChar(50)
+  tipologie_regola tipologie_regola @relation(fields: [Tipologia], references: [Tipo], onDelete: NoAction, onUpdate: NoAction, map: "FK_Tipologia")
+  annunci_regole   annunci_regole[]
+
+  @@index([Tipologia], map: "FK_Tipologia_idx")
+}
+
+model sconti {
+  Codice      String        @id @db.VarChar(100)
+  Percentuale Decimal       @db.Decimal(5, 2)
+  transazioni transazioni[]
+}
+
+model servizi {
+  Nome            String            @id @db.VarChar(100)
+  annunci_servizi annunci_servizi[]
+}
+
+model stati {
+  Nome   String   @id @db.VarChar(50)
+  luoghi luoghi[]
+}
+
+model tipologie_regola {
+  Tipo   String   @id @db.VarChar(50)
+  regole regole[]
+}
+
+model transazioni {
+  CodicePrenotazione Int
+  CodiceHost         String           @db.VarChar(255)
+  Stato              String           @db.VarChar(50)
+  PrezzoFinale       Decimal          @db.Decimal(12, 2)
+  MetodoPagamento    String           @db.VarChar(50)
+  CodiceSconto       String?          @db.VarChar(100)
+  host               host             @relation(fields: [CodiceHost], references: [CodiceCliente], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transazione_Host")
+  prenotazioni       prenotazioni     @relation(fields: [CodicePrenotazione], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transazione_Prenotazione")
+  sconti             sconti?          @relation(fields: [CodiceSconto], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transazione_Sconto")
+  metodi_pagamento   metodi_pagamento @relation(fields: [MetodoPagamento], references: [Metodo], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transazione_Metodo_Pagamento")
+
+  @@id([CodicePrenotazione, CodiceHost])
+  @@index([CodiceHost], map: "FK_Transazione_Host_idx")
+  @@index([MetodoPagamento], map: "FK_Transazione_Metodo_Pagamento_idx")
+  @@index([CodiceSconto], map: "FK_Transazione_Sconto_idx")
 }

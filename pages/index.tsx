@@ -1,8 +1,16 @@
 import type { NextPage } from 'next'
 import Head from "next/head"
 import Header from "../components/Header"
+import { PrismaClient } from '@prisma/client'
+import type { GetStaticProps } from 'next'
 
-const Home: NextPage = () => {
+
+interface PageProps {
+  languages: string[]
+}
+
+const Home: NextPage<PageProps> = (props: PageProps) => {
+  console.log(props.languages);
   return (
     <>
       <Head>
@@ -21,6 +29,17 @@ const Home: NextPage = () => {
       </section>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  const prisma = new PrismaClient();
+  const lingue = await prisma.lingue.findMany();
+
+  return {
+    props: {
+      languages: lingue
+    }
+  };
 }
 
 export default Home
