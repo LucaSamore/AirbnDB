@@ -160,18 +160,7 @@ const Upload: NextPage = () => {
                     <th>17</th>
                     <td>Immagini</td>
                     <td>
-
-                        <label htmlFor="images" className="btn modal-button w-full">Carica</label>
-
-                        <input type="checkbox" id="images" className="modal-toggle" />
-                        <div className="modal">
-                        <div className="modal-box">
-                            <h3 className="font-bold text-lg">Carica alcune foto del tuo alloggio</h3>
-                            <div className="modal-action">
-                                <label htmlFor="images" className="btn">Conferma</label>
-                            </div>
-                        </div>
-                        </div>
+                        <input className="block w-full text-lg text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" multiple />
                     </td>
                 </tr>
 
