@@ -4,13 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { GetStaticProps } from 'next'
 import { prisma } from '../util/db'
-
-interface Stato {
-    Nome: string
-}
-interface Citta {
-    Nome: string
-}
+import { Citta, Stato } from '../util/types'
 interface PageProps {
     stati: Stato[],
     citta: Citta[]
@@ -242,10 +236,7 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
 export const getStaticProps: GetStaticProps = async () => {
     const countries = await prisma.stati.findMany()
     const cities = await prisma.citta.findMany()
-
-    console.log(countries)
-    console.log(cities)
-
+    
     return {
         props: {
             stati: countries,
