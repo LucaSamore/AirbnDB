@@ -2,8 +2,21 @@ import type { NextPage } from 'next'
 import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
+import type { GetStaticProps } from 'next'
+import { prisma } from '../util/db'
 
-const Upload: NextPage = () => {
+interface Stato {
+    Nome: string
+}
+interface Citta {
+    Nome: string
+}
+interface PageProps {
+    stati: Stato[],
+    citta: Citta[]
+}
+
+const Upload: NextPage<PageProps> = (props: PageProps) => {
   return (
     <>
         <Head>
@@ -88,6 +101,13 @@ const Upload: NextPage = () => {
                     <td>
                         <select className="select select-bordered w-full max-w-xs">
                             <option disabled selected>Seleziona</option>
+                            {
+                                props.citta.map((citta, key) => {
+                                    return(
+                                        <option key={key}>{citta.Nome}</option>
+                                    )
+                                })
+                            }
                         </select>
                     </td>
                 </tr>
@@ -97,6 +117,13 @@ const Upload: NextPage = () => {
                     <td>
                         <select className="select select-bordered w-full max-w-xs">
                             <option disabled selected>Seleziona</option>
+                            {
+                                props.stati.map((stato, key) => {
+                                    return(
+                                        <option key={key}>{stato.Nome}</option>
+                                    )
+                                })
+                            }
                         </select>
                     </td>
                 </tr>
@@ -210,6 +237,21 @@ const Upload: NextPage = () => {
         </section>
     </>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+    const countries = await prisma.stati.findMany()
+    const cities = await prisma.citta.findMany()
+
+    console.log(countries)
+    console.log(cities)
+
+    return {
+        props: {
+            stati: countries,
+            citta: cities
+        }
+    }
 }
 
 export default Upload
