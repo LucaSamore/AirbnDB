@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import type { GetStaticProps } from 'next'
-import type { Annuncio, AnnuncioCard } from '../util/types'
+import type { AnnuncioCard } from '../util/types'
 import { prisma } from '../util/db'
 import Head from "next/head"
 import Header from "../components/Header"
@@ -29,10 +29,12 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
 
         <section className="grid lg:grid-cols-3 md:grid-cols-1 justify-items-center gap-10">
           {
-            
             props.annunci.map((a, key) => {
               return (
-                <Card key={key} title={a.Titolo} price={a.PrezzoPerNotte} />
+                <Card key={key} 
+                      Titolo={a.Titolo} 
+                      PrezzoPerNotte={a.PrezzoPerNotte} 
+                      MediaRecensioni={a.MediaRecensioni} />
               )
             })
           }
@@ -43,20 +45,36 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const stays = await prisma.annunci.findMany()
+  const stays = await prisma.annunci.findMany({
+    where: {
+      Disponibile: true,
+    },
+    include: {
+      recensioni: true,
+    },
+    take: 100
+  })
+
+  const staysWithAvgReview: AnnuncioCard[] = 
+    stays.filter(s => s.recensioni.length !== 0)
+         .map(
+            s => ({
+            Titolo: s.Titolo,
+            PrezzoPerNotte: s.PrezzoPerNotte.toNumber(),
+            MediaRecensioni: s.recensioni
+              .map(r => ((r.VotoPrecisione +
+                          r.VotoComunicazione +
+                          r.VotoPosizione +
+                          r.VotoQualitaPrezzo +
+                          r.VotoCheckIn +
+                          r.VotoPulizia)/6))
+              .reduce((x,y) => x + y, 0) / s.recensioni.length
+            }))
+         .sort((s1,s2) => s1.MediaRecensioni < s2.MediaRecensioni ? 1 : -1)
 
   return {
       props: {
-          annunci: stays.map((stay) => ({
-             CodiceAlloggio: stay.CodiceAlloggio,
-             Titolo: stay.Titolo,
-             Descrizione: stay.Descrizione,
-             Disponibile: stay.Disponibile,
-             PrezzoPerNotte: stay.PrezzoPerNotte.toNumber(),
-             CostoServizio: stay.CostoServizio.toNumber(),
-             CostoPulizia: stay.CostoPulizia.toNumber(),
-             Tasse: stay.Tasse.toNumber()
-          }))
+          annunci: staysWithAvgReview
       }
   }
 }
