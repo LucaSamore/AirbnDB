@@ -1,5 +1,6 @@
 import React from "react";
 import type { AnnuncioCard } from "../util/types";
+import Link from 'next/link'
 
 const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
     return (
@@ -10,7 +11,9 @@ const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
                 <p><b>Voto medio:</b> {props.MediaRecensioni.toFixed(1)}</p>
                 <p><b>{props.PrezzoPerNotte}€</b> /notte</p>
                 <div className="card-actions justify-end">
-                <button className="btn btn-primary">Esplora</button>
+                    <Link href={`/annunci/${encodeURIComponent(props.CodiceAlloggio)}`}>
+                        <button className="btn btn-primary">Esplora</button>
+                    </Link>
                 </div>
             </div>
         </div>

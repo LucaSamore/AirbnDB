@@ -32,6 +32,7 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
             props.annunci.map((a, key) => {
               return (
                 <Card key={key} 
+                      CodiceAlloggio={a.CodiceAlloggio}
                       Titolo={a.Titolo} 
                       PrezzoPerNotte={a.PrezzoPerNotte} 
                       MediaRecensioni={a.MediaRecensioni} />
@@ -59,6 +60,7 @@ export const getStaticProps: GetStaticProps = async () => {
     stays.filter(s => s.recensioni.length !== 0)
          .map(
             s => ({
+            CodiceAlloggio: s.CodiceAlloggio,
             Titolo: s.Titolo,
             PrezzoPerNotte: s.PrezzoPerNotte.toNumber(),
             MediaRecensioni: s.recensioni

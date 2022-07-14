@@ -21,4 +21,4 @@ interface AnnuncioConVotoMedio extends Annuncio {
     MediaRecensioni: number
 }
 
-export type AnnuncioCard = Pick<AnnuncioConVotoMedio, "Titolo" | "PrezzoPerNotte" | "MediaRecensioni">
+export type AnnuncioCard = Pick<AnnuncioConVotoMedio, "CodiceAlloggio" | "Titolo" | "PrezzoPerNotte" | "MediaRecensioni">
