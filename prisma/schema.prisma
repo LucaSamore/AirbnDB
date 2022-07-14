@@ -14,21 +14,19 @@ model alloggi {
   NumeroBagni       Int            @db.TinyInt
   NumeroCamereLetto Int            @db.TinyInt
   NumeroLetti       Int            @db.TinyInt
-  annunci           annunci?
   luoghi            luoghi?
   possedimenti      possedimenti[]
 }
 
 model annunci {
-  CodiceAlloggio  Int               @id @default(autoincrement())
+  CodiceAlloggio  Int               @id
   Titolo          String            @db.VarChar(100)
   Descrizione     String            @db.Text
-  Disponibile     Boolean           @db.Bit(1)
-  PrezzoPerNotte  Decimal           @db.Decimal(8, 2)
-  CostoServizio   Decimal           @db.Decimal(6, 2)
-  CostoPulizia    Decimal           @db.Decimal(6, 2)
-  Tasse           Decimal           @db.Decimal(6, 2)
-  alloggi         alloggi           @relation(fields: [CodiceAlloggio], references: [Codice], onDelete: Cascade, onUpdate: NoAction, map: "FK_Codice_Alloggio")
+  Disponibile     Int               @db.TinyInt
+  PrezzoPerNotte  Decimal           @db.Decimal(10, 2)
+  CostoServizio   Decimal           @db.Decimal(10, 2)
+  CostoPulizia    Decimal           @db.Decimal(10, 2)
+  Tasse           Decimal           @db.Decimal(10, 2)
   annunci_regole  annunci_regole[]
   annunci_servizi annunci_servizi[]
   immagini        immagini[]
@@ -39,7 +37,7 @@ model annunci {
 model annunci_regole {
   CodiceAnnuncio Int
   CodiceRegola   Int
-  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio_Regola")
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Annuncio_Regola_Annuncio")
   regole         regole  @relation(fields: [CodiceRegola], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Regola")
 
   @@id([CodiceAnnuncio, CodiceRegola])
@@ -49,8 +47,8 @@ model annunci_regole {
 model annunci_servizi {
   CodiceAnnuncio Int
   NomeServizio   String  @db.VarChar(100)
-  Incluso        Boolean @db.Bit(1)
-  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio_Servizio")
+  Incluso        Int?    @db.TinyInt
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Annuncio_Servizio_Annuncio")
   servizi        servizi @relation(fields: [NomeServizio], references: [Nome], onDelete: NoAction, onUpdate: NoAction, map: "FK_Nome_Servizio_Annuncio")
 
   @@id([CodiceAnnuncio, NomeServizio])
@@ -109,9 +107,9 @@ model immagini {
   Codice         Int     @id @default(autoincrement())
   Percorso       String  @db.Text
   CodiceAnnuncio Int
-  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Codice_Annuncio")
+  annunci        annunci @relation(fields: [CodiceAnnuncio], references: [CodiceAlloggio], onDelete: NoAction, onUpdate: NoAction, map: "FK_Immagine_Annuncio")
 
-  @@index([CodiceAnnuncio], map: "FK_Codice_Annuncio_idx")
+  @@index([CodiceAnnuncio], map: "FK_Immagine_Annuncio_idx")
 }
 
 model lingue {

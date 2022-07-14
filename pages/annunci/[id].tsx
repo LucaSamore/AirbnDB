@@ -4,6 +4,7 @@ import Head from 'next/head'
 import Header from "../../components/Header"
 import type { GetServerSideProps } from 'next'
 import { prisma } from '../../util/db'
+import { AnnuncioAlloggio, AnnuncioRegola, AnnuncioServizio, DisplayHost, Luogo, Recensione } from '../../util/types'
 import {
     getAccommodation,
     getAccommodationHosts,
@@ -15,12 +16,18 @@ import {
 } from '../../util/fetchers'
 
 interface PageProps {
-
+    accommodation: AnnuncioAlloggio,
+    hosts: DisplayHost[],
+    reviews: Recensione[],
+    position: Luogo,
+    services: AnnuncioServizio[],
+    rules: AnnuncioRegola[],
+    images: string[]
 }
 
 const Accommodation: NextPage<PageProps> = (props: PageProps) => {
-  const router = useRouter()
-  const { id } = router.query
+    console.log(props.rules)
+    console.log(props.rules.flatMap(r => r.CodiceRegola))
   return (
     <>
         <Head>
@@ -29,7 +36,8 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
         </Head>
         <Header />
 
-        <section className="flex flex-col gap-5 mx-auto mt-12 bg-dark-mode-2 rounded-xl w-3/4">
+        <section className="flex flex-col gap-4 mx-auto mt-12 w-3/4 items-center">
+            <h1 className="text-6xl font-bold text-white font-quicksand p-5">{props.accommodation.Titolo}</h1>
             <div className="carousel w-full">
                 <div id="slide1" className="carousel-item relative w-full">
                     <img src="https://placeimg.com/800/200/arch" className="w-full" />
@@ -58,6 +66,69 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                             <a href="#slide3" className="btn btn-circle">❮</a> 
                             <a href="#slide1" className="btn btn-circle">❯</a>
                         </div>
+                </div>
+            </div>
+
+            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+                <h2 className="text-4xl font-bold text-white font-quicksand">Descrizione</h2>
+                <p className="text-xl text-white font-quicksand mt-6">{props.accommodation.Descrizione}</p>
+            </div>
+
+            <div className="flex w-full">
+                <div className="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center p-5">
+                    <h3 className="text-2xl text-white font-quicksand">Servizi</h3>
+                    <div className="overflow-x-auto w-3/4 mt-4">
+                        <table className="table w-full">
+                            <thead>
+                            <tr>
+                            <th></th>
+                            <th>Nome</th>
+                            <th>Incluso</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    props.services.map((s, key) => {
+                                        return (<tr key={key}>
+                                            <th>{key+1}</th>
+                                            <td>{s.NomeServizio}</td>
+                                            <td>{s.Incluso ? "SI" : "NO"}</td>
+                                        </tr>)
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="divider divider-horizontal"></div>
+                <div className="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center p-5">
+                    <h3 className="text-2xl text-white font-quicksand">Regole</h3>
+                    <div className="overflow-x-auto w-5/6 mt-4">
+                        <table className="table w-full">
+                            <thead>
+                            <tr>
+                            <th></th>
+                            <th>Descrizione</th>
+                            <th>Tipologia</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    props.rules
+                                        .map(r => r.regole)
+                                        .map((r,key) => {
+                                            return (
+                                                <tr key={key}>
+                                                <th>{key+1}</th>
+                                                <td>{r.Descrizione}</td>
+                                                <td>{r.Tipologia}</td>
+                                                </tr>
+                                            )
+                                        })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -97,8 +168,6 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
                 }
         })
     })))
-    
-    console.log(hosts)
 
     return {
         props: {

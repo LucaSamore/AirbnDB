@@ -20,8 +20,7 @@ interface Host extends Cliente {
     LingueParlate: string[]
 }
 
-export type DisplayHost = Omit<Host, "Codice" | "CodiceHost" | "CoordinateBancarie" | 
-                                     "CodiceDocumento" | "TipologiaDocumento" | "DataScadenzaDocumento">
+export type DisplayHost = Pick<Host, "CodiceCliente" | "Biografia" | "LingueParlate" | "Nome" | "Cognome" | "Email">
 export interface Recensione {
     CodicePrenotazione: number,
     Descrizione: string,
@@ -49,17 +48,17 @@ export interface AnnuncioServizio {
     Incluso: boolean
 }
 
-export interface AnnuncioRegola {
-    CodiceAnnuncio: number,
-    CodiceRegola: number,
-    Regola: Regola
-}
-
 export interface Regola {
     Codice: number,
     Descrizione: string,
     Tipologia: string
 }
+export interface AnnuncioRegola {
+    CodiceAnnuncio: number,
+    CodiceRegola: number,
+    regole: Regola
+}
+
 export interface Stato {
     Nome: string
 }
@@ -77,6 +76,19 @@ export interface Annuncio {
     CostoServizio: number,
     CostoPulizia: number,
     Tasse: number
+}
+
+export interface Alloggio {
+    Codice: number,
+    Tipologia: string,
+    NumeroOspitabili: number,
+    NumeroBagni: number,
+    NumeroCamereLetto: number,
+    NumeroLetti: number
+}
+
+export interface AnnuncioAlloggio extends Annuncio {
+    Alloggio: Alloggio
 }
 
 interface AnnuncioConVotoMedio extends Annuncio {
