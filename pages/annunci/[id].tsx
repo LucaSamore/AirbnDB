@@ -4,13 +4,21 @@ import Head from 'next/head'
 import Header from "../../components/Header"
 import type { GetServerSideProps } from 'next'
 import { prisma } from '../../util/db'
-import { DisplayHost } from '../../util/types';
+import {
+    getAccommodation,
+    getAccommodationHosts,
+    getReviews,
+    getPosition,
+    getServices,
+    getRules,
+    getImages
+} from '../../util/fetchers'
 
 interface PageProps {
 
 }
 
-const Annuncio: NextPage<PageProps> = (props: PageProps) => {
+const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   const router = useRouter()
   const { id } = router.query
   return (
@@ -60,33 +68,15 @@ const Annuncio: NextPage<PageProps> = (props: PageProps) => {
 export const getServerSideProps: GetServerSideProps = async(context) => {
     const { id } = context.query
 
-    const accommodation = await prisma.annunci.findUnique({
-        where: {
-            CodiceAlloggio: parseInt(id as string)
-        },
-        include: {
-            alloggi: true
-        }
-    })
+    const accommodation = await getAccommodation(parseInt(id as string))
+    const accommodationHosts = await getAccommodationHosts(parseInt(id as string))
+    const reviews = await getReviews(parseInt(id as string))
+    const position = await getPosition(parseInt(id as string))
+    const services = await getServices(parseInt(id as string))
+    const rules = await getRules(parseInt(id as string))
+    const images = await getImages(parseInt(id as string))
 
-    const accomodationHosts = await prisma.alloggi.findMany({
-        where: {
-            Codice: parseInt(id as string)
-        },
-        include: {
-            possedimenti: {
-                include: {
-                    host: {
-                        include: {
-                            host_lingue: true
-                        }
-                    }
-                }
-            }
-        }
-    })
-
-    const hosts: any[] = await Promise.all(accomodationHosts
+    const hosts: any[] = await Promise.all(accommodationHosts
         .flatMap(ah => ah.possedimenti)
         .flatMap(p => p.host)
         .map(h => ({
@@ -99,50 +89,38 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
             ...await prisma.clienti.findUnique({
                 where: {
                     Codice: h.CodiceCliente
+                },
+                select: {
+                    Nome: true,
+                    Cognome: true,
+                    Email: true
                 }
         })
     })))
-
+    
     console.log(hosts)
-
-    const reviews = await prisma.recensioni.findMany({
-        where: {
-            CodiceAnnuncio: parseInt(id as string)
-        }
-    })
-
-    const position = await prisma.luoghi.findUnique({
-        where: {
-            CodiceAlloggio: parseInt(id as string)
-        }
-    })
-
-    const services = await prisma.annunci_servizi.findMany({
-        where: {
-            CodiceAnnuncio: parseInt(id as string)
-        }
-    })
-
-    const rules = await prisma.annunci_regole.findMany({
-        where: {
-            CodiceAnnuncio: parseInt(id as string)
-        },
-        include: {
-            regole: true
-        },
-    })
-
-    const images = await prisma.immagini.findMany({
-        where: {
-            CodiceAnnuncio: parseInt(id as string)
-        }
-    })
 
     return {
         props: {
-            test: null
+            accommodation: {
+                CodiceAlloggio: accommodation?.CodiceAlloggio,
+                PrezzoPerNotte: accommodation?.PrezzoPerNotte.toNumber(),
+                CostoPulizia: accommodation?.CostoPulizia.toNumber(),
+                CostoServizio: accommodation?.CostoServizio.toNumber(),
+                Descrizione: accommodation?.Descrizione,
+                Disponibile: accommodation?.Disponibile,
+                Titolo: accommodation?.Titolo,
+                Tasse: accommodation?.Tasse.toNumber(),
+                alloggi: accommodation?.alloggi
+            },
+            hosts: hosts,
+            reviews: reviews,
+            position: position,
+            services: services,
+            rules: rules,
+            images: images
         }
     }
 }
 
-export default Annuncio
+export default Accommodation
