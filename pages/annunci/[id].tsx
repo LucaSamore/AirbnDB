@@ -26,8 +26,6 @@ interface PageProps {
 }
 
 const Accommodation: NextPage<PageProps> = (props: PageProps) => {
-    console.log(props.rules)
-    console.log(props.rules.flatMap(r => r.CodiceRegola))
   return (
     <>
         <Head>
@@ -129,6 +127,42 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+                <h2 className="text-4xl font-bold text-white font-quicksand">Riguardo agli host</h2>
+
+                <div className="flex lg:flex-row sm:flex-col justify-around gap-6 mt-6">
+                    {props.hosts.map((h,key) => {
+                        return (
+                            <div key={key} className="card w-auto bg-base-100 shadow-xl font-quicksand text-white p-4">
+                                <div className="card-body">
+                                    <h2 className="card-title">{h.Nome} {h.Cognome}</h2>
+                                    <p>{h.Biografia}</p>
+                                    <p><b>Contatto:</b> {h.Email}</p>
+                                    <p><b>Lingue parlate:</b></p>
+                                    <ul>
+                                        {h.LingueParlate.map((l,key) => {
+                                            return (<li key={key}>{l}</li>)
+                                        })}
+                                    </ul>
+                                </div>
+                                <label htmlFor={`${h.CodiceCliente}`} className="btn modal-button">Contatta</label>
+                                <input type="checkbox" id={`${h.CodiceCliente}`} className="modal-toggle" />
+                                <div className="modal">
+                                <div className="modal-box h-1/2">
+                                    <label htmlFor={`${h.CodiceCliente}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                    <h3 className="font-bold text-lg">Invia un messagio a {h.Nome} {h.Cognome}</h3>
+                                    <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3" placeholder="Messaggio"></textarea>
+                                    <div className="modal-action">
+                                    <label htmlFor={`${h.CodiceCliente}`} className="btn">Invia</label>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
         </section>
