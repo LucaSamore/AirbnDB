@@ -30,7 +30,8 @@ export interface Recensione {
     VotoQualitaPrezzo: number,
     VotoCheckIn: number,
     VotoPulizia: number,
-    CodiceAnnuncio: number
+    CodiceAnnuncio: number,
+    NomeCliente: string
 }
 
 export interface Luogo {

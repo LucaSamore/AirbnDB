@@ -31,11 +31,35 @@ export async function getAccommodationHosts(id: number) {
 }
 
 export async function getReviews(id: number) {
-    return await prisma.recensioni.findMany({
+    const heavyReview = await prisma.recensioni.findMany({
         where: {
             CodiceAnnuncio: id
+        },
+        include: {
+            prenotazioni: {
+                include: {
+                    clienti: {
+                        select: {
+                            Nome: true
+                        }
+                    }
+                }
+            }
         }
     })
+
+    return heavyReview.map(r => ({
+        CodicePrenotazione: r.CodicePrenotazione,
+        Descrizione: r.Descrizione,
+        VotoPrecisione: r.VotoPrecisione,
+        VotoComunicazione: r.VotoComunicazione,
+        VotoPosizione: r.VotoPosizione,
+        VotoQualitaPrezzo: r.VotoQualitaPrezzo,
+        VotoCheckIn: r.VotoCheckIn,
+        VotoPulizia: r.VotoPulizia,
+        CodiceAnnuncio: r.CodiceAnnuncio,
+        NomeCliente: r.prenotazioni.clienti.Nome
+    }))
 }
 
 export async function getPosition(id: number) {

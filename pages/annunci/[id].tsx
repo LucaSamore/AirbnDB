@@ -1,10 +1,17 @@
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Header from "../../components/Header"
 import type { GetServerSideProps } from 'next'
 import { prisma } from '../../util/db'
-import { AnnuncioAlloggio, AnnuncioRegola, AnnuncioServizio, DisplayHost, Luogo, Recensione } from '../../util/types'
+import Review from '../../components/Review'
+import { 
+    AnnuncioAlloggio, 
+    AnnuncioRegola, 
+    AnnuncioServizio, 
+    DisplayHost, 
+    Luogo, 
+    Recensione 
+} from '../../util/types'
 import {
     getAccommodation,
     getAccommodationHosts,
@@ -29,7 +36,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   return (
     <>
         <Head>
-            <title> AirbnDB - Home </title>
+            <title> AirbnDB - Annuncio </title>
             <link rel="icon" href="/airbnDB.ico" />
         </Head>
         <Header />
@@ -164,6 +171,18 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         )
                     })}
                 </div>
+            </div>
+            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+                <h2 className="text-4xl font-bold text-white font-quicksand">Recensioni</h2>
+                <section className="flex lg:flex-row md:flex-col sm: flex-col gap-10 mt-6">
+                    {
+                        props.reviews.map((r,key) => {
+                            return(
+                                <Review key={key} review={r}/>
+                            )
+                        })
+                    }
+                </section>
             </div>
         </section>
     </>
