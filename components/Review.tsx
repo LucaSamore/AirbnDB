@@ -30,7 +30,7 @@ const displayStars = (howMany: number) => {
 
 const Review: React.FC<PageProps> = (props: PageProps) => {
     return (
-        <div className="card w-96 bg-base-100 shadow-xl font-quicksand text-white">
+        <div className="card w-96 bg-dark-mode-3 shadow-xl font-quicksand text-white">
             <div className="card-body">
                 <h2 className="card-title">{props.review.NomeCliente}</h2>
                 <p>{props.review.Descrizione}</p>

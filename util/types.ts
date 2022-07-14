@@ -89,7 +89,7 @@ export interface Alloggio {
 }
 
 export interface AnnuncioAlloggio extends Annuncio {
-    Alloggio: Alloggio
+    alloggi: Alloggio
 }
 
 interface AnnuncioConVotoMedio extends Annuncio {

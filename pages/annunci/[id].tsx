@@ -74,15 +74,49 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                 </div>
             </div>
 
-            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+            <div className="grid card bg-dark-mode-2 rounded-box place-items-center w-full p-8">
                 <h2 className="text-4xl font-bold text-white font-quicksand">Descrizione</h2>
                 <p className="text-xl text-white font-quicksand mt-6">{props.accommodation.Descrizione}</p>
             </div>
 
+            <div className="flex flex-col w-full lg:flex-row">
+                <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center pb-4">
+                    <h3 className="text-2xl text-white font-quicksand font-bold pt-4 pb-2">Info alloggio</h3>
+                    <div className="flex flex-col justify-between gap-2 p-2 font-quicksand">
+                        <div className="flex gap-4 text-xl">
+                            <p className="font-bold">Tipologia alloggio:</p>
+                            <p>{props.accommodation.alloggi.Tipologia}</p>
+                        </div>
+                        <div className="flex gap-4 text-lg">
+                            <p className="font-bold">Numero persone ospitabili:</p>
+                            <p>{props.accommodation.alloggi.NumeroOspitabili}</p>
+                        </div>
+                        <div className="flex gap-4 text-lg">
+                            <p className="font-bold">Numero bagni:</p>
+                            <p>{props.accommodation.alloggi.NumeroBagni}</p>
+                        </div>
+                        <div className="flex gap-4 text-lg">
+                            <p className="font-bold">Numero camere da letto:</p>
+                            <p>{props.accommodation.alloggi.NumeroCamereLetto}</p>
+                        </div>
+                        <div className="flex gap-4 text-lg">
+                            <p className="font-bold">Numero letti:</p>
+                            <p>{props.accommodation.alloggi.NumeroLetti}</p>
+                        </div>
+                    </div>
+                </div> 
+                <div className="divider lg:divider-horizontal"></div> 
+                <div className="grid flex-grow h-32 card bg-dark-mode-2 rounded-box place-items-center">content</div>
+            </div>
+
+
+
+
+
             <div className="flex w-full">
-                <div className="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center p-5">
-                    <h3 className="text-2xl text-white font-quicksand">Servizi</h3>
-                    <div className="overflow-x-auto w-3/4 mt-4">
+                <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center p-5">
+                    <h3 className="text-2xl text-white font-quicksand font-bold">Servizi</h3>
+                    <div className="overflow-x-auto w-3/4 mt-4 h-5/6">
                         <table className="table w-full">
                             <thead>
                             <tr>
@@ -106,8 +140,8 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                     </div>
                 </div>
                 <div className="divider divider-horizontal"></div>
-                <div className="grid h-auto flex-grow card bg-base-300 rounded-box place-items-center p-5">
-                    <h3 className="text-2xl text-white font-quicksand">Regole</h3>
+                <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center p-5">
+                    <h3 className="text-2xl text-white font-quicksand font-bold">Regole</h3>
                     <div className="overflow-x-auto w-5/6 mt-4">
                         <table className="table w-full">
                             <thead>
@@ -137,13 +171,13 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                 </div>
             </div>
 
-            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+            <div className="grid card bg-dark-mode-2 rounded-box place-items-center w-full p-8">
                 <h2 className="text-4xl font-bold text-white font-quicksand">Riguardo agli host</h2>
 
                 <div className="flex lg:flex-row sm:flex-col justify-around gap-6 mt-6">
                     {props.hosts.map((h,key) => {
                         return (
-                            <div key={key} className="card w-auto bg-base-100 shadow-xl font-quicksand text-white p-4">
+                            <div key={key} className="card w-auto bg-dark-mode-3 shadow-xl font-quicksand text-white p-4">
                                 <div className="card-body">
                                     <h2 className="card-title">{h.Nome} {h.Cognome}</h2>
                                     <p>{h.Biografia}</p>
@@ -158,10 +192,10 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                 <label htmlFor={`${h.CodiceCliente}`} className="btn modal-button">Contatta</label>
                                 <input type="checkbox" id={`${h.CodiceCliente}`} className="modal-toggle" />
                                 <div className="modal">
-                                <div className="modal-box h-1/2">
+                                <div className="modal-box h-1/2 bg-dark-mode-2">
                                     <label htmlFor={`${h.CodiceCliente}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                                     <h3 className="font-bold text-lg">Invia un messagio a {h.Nome} {h.Cognome}</h3>
-                                    <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3" placeholder="Messaggio"></textarea>
+                                    <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3 bg-dark-mode-2" placeholder="Messaggio"></textarea>
                                     <div className="modal-action">
                                     <label htmlFor={`${h.CodiceCliente}`} className="btn">Invia</label>
                                     </div>
@@ -172,7 +206,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                     })}
                 </div>
             </div>
-            <div className="grid card bg-base-300 rounded-box place-items-center w-full p-8">
+            <div className="grid card bg-dark-mode-2 rounded-box place-items-center w-full p-8">
                 <h2 className="text-4xl font-bold text-white font-quicksand">Recensioni</h2>
                 <section className="flex lg:flex-row md:flex-col sm: flex-col gap-10 mt-6">
                     {

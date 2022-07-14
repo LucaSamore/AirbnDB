@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
     return (
-        <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card w-96 bg-dark-mode-3 shadow-xl">
             <figure><img src="https://placeimg.com/400/225/arch" alt="Shoes" /></figure>
             <div className="card-body">
                 <h2 className="card-title">{props.Titolo}</h2>
