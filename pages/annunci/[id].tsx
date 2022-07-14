@@ -109,10 +109,6 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                 <div className="grid flex-grow h-32 card bg-dark-mode-2 rounded-box place-items-center">content</div>
             </div>
 
-
-
-
-
             <div className="flex w-full">
                 <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center p-5">
                     <h3 className="text-2xl text-white font-quicksand font-bold">Servizi</h3>
@@ -189,15 +185,17 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                         })}
                                     </ul>
                                 </div>
-                                <label htmlFor={`${h.CodiceCliente}`} className="btn modal-button">Contatta</label>
+                                <label htmlFor={`${h.CodiceCliente}`} className="btn modal-button bg-gradient-to-r from-red-500 to-pink-500 border-none
+                                 transition ease-in-out delay-250 hover:scale-105 text-white font-bold">Contatta</label>
                                 <input type="checkbox" id={`${h.CodiceCliente}`} className="modal-toggle" />
                                 <div className="modal">
                                 <div className="modal-box h-1/2 bg-dark-mode-2">
-                                    <label htmlFor={`${h.CodiceCliente}`} className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                                    <label htmlFor={`${h.CodiceCliente}`} className="btn btn-sm btn-circle absolute right-2 top-2 bg-dark-mode-2 border-none">✕</label>
                                     <h3 className="font-bold text-lg">Invia un messagio a {h.Nome} {h.Cognome}</h3>
                                     <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3 bg-dark-mode-2" placeholder="Messaggio"></textarea>
                                     <div className="modal-action">
-                                    <label htmlFor={`${h.CodiceCliente}`} className="btn">Invia</label>
+                                    <label htmlFor={`${h.CodiceCliente}`} className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none
+                                 transition ease-in-out delay-250 hover:scale-105 text-white font-bold">Invia</label>
                                     </div>
                                 </div>
                                 </div>

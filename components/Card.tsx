@@ -12,7 +12,7 @@ const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
                 <p><b>{props.PrezzoPerNotte}€</b> /notte</p>
                 <div className="card-actions justify-end">
                     <Link href={`/annunci/${encodeURIComponent(props.CodiceAlloggio)}`}>
-                        <button className="btn btn-primary">Esplora</button>
+                        <button className="btn btn-primary bg-gradient-to-r from-red-500 to-pink-500 border-none transition ease-in-out delay-250 hover:scale-110">Esplora</button>
                     </Link>
                 </div>
             </div>
