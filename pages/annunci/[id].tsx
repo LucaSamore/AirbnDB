@@ -4,10 +4,13 @@ import Header from "../../components/Header"
 import type { GetServerSideProps } from 'next'
 import { prisma } from '../../util/db'
 import Review from '../../components/Review'
+import { loggedUser } from '../../util/loggedUser';
+import { useState } from 'react'
 import { 
     AnnuncioAlloggio, 
     AnnuncioRegola, 
-    AnnuncioServizio, 
+    AnnuncioServizio,
+    LoggedUser,
     DisplayHost, 
     Luogo, 
     Recensione 
@@ -23,6 +26,7 @@ import {
 } from '../../util/fetchers'
 
 interface PageProps {
+    loggedUser: LoggedUser
     accommodation: AnnuncioAlloggio,
     hosts: DisplayHost[],
     reviews: Recensione[],
@@ -32,7 +36,26 @@ interface PageProps {
     images: string[]
 }
 
+const sendMessage = async (message: string, clientId: string, hostId: string) => {
+    const res = await fetch('/api/message', {
+        method: 'POST',
+        body: JSON.stringify({
+            message: message,
+            client: clientId,
+            host: hostId
+        })
+    })
+
+    if(!res.ok) {
+        throw new Error(res.statusText)
+    }
+
+    return await res.json()
+}
+
 const Accommodation: NextPage<PageProps> = (props: PageProps) => {
+  const [message, setMessage] = useState<string>("")
+
   return (
     <>
         <Head>
@@ -192,10 +215,29 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                 <div className="modal-box h-1/2 bg-dark-mode-2">
                                     <label htmlFor={`${h.CodiceCliente}`} className="btn btn-sm btn-circle absolute right-2 top-2 bg-dark-mode-2 border-none">✕</label>
                                     <h3 className="font-bold text-lg">Invia un messagio a {h.Nome} {h.Cognome}</h3>
-                                    <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3 bg-dark-mode-2" placeholder="Messaggio"></textarea>
+                                    <textarea className="textarea textarea-bordered p-5 w-full mt-6 h-2/3 bg-dark-mode-2" 
+                                              placeholder="Messaggio"
+                                              onChange={e => setMessage(e.target.value)}>
+                                    </textarea>
                                     <div className="modal-action">
-                                    <label htmlFor={`${h.CodiceCliente}`} className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none
-                                 transition ease-in-out delay-250 hover:scale-105 text-white font-bold">Invia</label>
+
+                                    <button className="px-6 py-3 mt-3 border-none rounded-lg font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm transition ease-in-out delay-250 hover:scale-110"
+                                            onClick={
+                                                async () => {
+                                                    try {
+                                                        const res = await sendMessage(message, props.loggedUser.Codice, h.CodiceCliente)
+
+                                                        if(res) {
+                                                            alert("Messaggio inviato con successo!")
+                                                        }
+
+                                                    } catch(err) {
+                                                        console.error(err)
+                                                    }  
+                                                }                                   
+                                            }>
+                                        INVIA
+                                    </button>
                                     </div>
                                 </div>
                                 </div>
@@ -223,7 +265,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async(context) => {
     const { id } = context.query
-
+    const user = await loggedUser()
     const accommodation = await getAccommodation(parseInt(id as string))
     const accommodationHosts = await getAccommodationHosts(parseInt(id as string))
     const reviews = await getReviews(parseInt(id as string))
@@ -256,6 +298,13 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
 
     return {
         props: {
+            loggedUser: {
+                Codice: user?.Codice,
+                Nome: user?.Nome,
+                Cognome: user?.Cognome,
+                Email: user?.Email,
+                CodiceHost: user?.CodiceHost
+            },
             accommodation: {
                 CodiceAlloggio: accommodation?.CodiceAlloggio,
                 PrezzoPerNotte: accommodation?.PrezzoPerNotte.toNumber(),
