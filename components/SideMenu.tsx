@@ -9,7 +9,7 @@ interface ComponentProps {
 
 const SideMenu: React.FC<ComponentProps> = (props: ComponentProps) => {
     return (
-        <div className="drawer drawer-mobile basis-1/4">
+        <div className="drawer drawer-mobile basis-1/4 fixed">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
             <div className="drawer-side bg-dark-mode-3">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 

@@ -15,7 +15,7 @@ const Dashboard: NextPage<PageProps> = (props: PageProps) => {
             <title> AirbnDB - Dashboard </title>
             <link rel="icon" href="/airbnDB.ico" />
         </Head>
-        <section className="flex flex-row">
+        <section className="flex flex-row justify-end">
             <SideMenu loggedUser={props.loggedUser}/>
             <section className="basis-3/4 px-12">
                 <h1 className="text-white font-bold font-quicksand text-7xl mt-16">Ciao {props.loggedUser.Nome}!</h1>
