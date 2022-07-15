@@ -20,6 +20,8 @@ interface Host extends Cliente {
     LingueParlate: string[]
 }
 
+export type LoggedUser = Omit<Cliente, "DataCreazione" | "DataNascita" | "Password" | "Telefono">
+
 export type DisplayHost = Pick<Host, "CodiceCliente" | "Biografia" | "LingueParlate" | "Nome" | "Cognome" | "Email">
 export interface Recensione {
     CodicePrenotazione: number,
