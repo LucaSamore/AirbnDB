@@ -1,7 +1,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from "next/head"
 import { prisma } from '../../../util/db'
-import { Citta, LoggedUser, Stato } from '../../../util/types'
+import { Citta, LoggedUser, Regola, Servizio, Stato } from '../../../util/types'
 import SideMenu from '../../../components/SideMenu'
 import { loggedUser } from '../../../util/loggedUser'
 import { useState, useCallback } from 'react'
@@ -10,10 +10,14 @@ import { useDropzone } from 'react-dropzone'
 interface PageProps {
     loggedUser: LoggedUser,
     stati: Stato[],
-    citta: Citta[]
+    citta: Citta[],
+    servizi: Servizio[],
+    regole: Regola[]
 }
 
 const Upload: NextPage<PageProps> = (props: PageProps) => {
+  const [selectedServices, setSelectedServices] = useState<Set<Servizio>>(new Set())
+  const [selectedRules, setSelectedRules] = useState<Set<Regola>>(new Set())
   const [uploadedImages, setUploadedImages] = useState<any>([])
 
   const onDrop = useCallback((acceptedFiles: any[]) => {
@@ -216,13 +220,36 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
                             <td>
                                 <label htmlFor="services" className="btn modal-button w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Seleziona Servizi</label>
                                 <input type="checkbox" id="services" className="modal-toggle" />
-                                <div className="modal">
-                                <div className="modal-box">
-                                    <h3 className="font-bold text-lg">Seleziona i servizi offerti</h3>
-                                    <div className="modal-action">
-                                        <label htmlFor="services" className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Conferma</label>
+                                <div className="modal w-auto">
+                                    <div className="modal-box w-full no-scrollbar overflow-y-auto">
+                                        <label htmlFor="services" className="btn btn-sm btn-circle absolute right-5 top-5 bg-dark-mode-2 border-none">✕</label>
+                                        <h3 className="font-bold text-xl py-2">Seleziona i servizi offerti</h3>
+                                        {
+                                            props.servizi.map((s, key) => {
+                                                return (
+                                                    <div key={key} className="form-control">
+                                                        <label className="cursor-pointer label">
+                                                            <span className="label-text text-white text-lg py-2">{s.Nome}</span>
+                                                            <input type="checkbox" className="toggle" onClick={() => {
+                                                                const old = selectedServices
+
+                                                                if(old.has(s)) {
+                                                                    old.delete(s)
+                                                                } else {
+                                                                    old.add(s)
+                                                                }
+
+                                                                setSelectedServices(old)
+                                                            }}/>
+                                                        </label>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                        <div className="modal-action">
+                                            <label htmlFor="services" className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Conferma</label>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </td>
                         </tr>
@@ -234,12 +261,36 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
                                 <label htmlFor="rules" className="btn modal-button w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none font-quicksand text-white">Seleziona Regole</label>
                                 <input type="checkbox" id="rules" className="modal-toggle" />
                                 <div className="modal">
-                                <div className="modal-box">
-                                    <h3 className="font-bold text-lg">Seleziona le regole da rispettare</h3>
-                                    <div className="modal-action">
-                                        <label htmlFor="rules" className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Conferma</label>
+                                    <div className="modal-box w-11/12 max-w-5xl">
+                                        <label htmlFor="rules" className="btn btn-sm btn-circle absolute right-5 top-5 bg-dark-mode-2 border-none">✕</label>
+                                        <h3 className="font-bold text-xl py-2">Seleziona le regole da rispettare</h3>
+                                        {
+                                            props.regole.map((r, key) => {
+                                                return (
+                                                    <div key={key} className="form-control">
+                                                        <label className="cursor-pointer label w-auto max-h-full">
+                                                            <span className="label-text text-white text-lg">{r.Descrizione}</span>
+                                                            <input type="checkbox" className="toggle" onClick={() => {
+                                                                        const old = selectedRules
+
+                                                                        if (old.has(r)) {
+                                                                            old.delete(r)
+                                                                        } else {
+                                                                            old.add(r)
+                                                                        }
+
+                                                                        setSelectedRules(old)
+                                                                    }
+                                                                } />
+                                                        </label>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                        <div className="modal-action">
+                                            <label htmlFor="rules" className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Conferma</label>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </td>
                         </tr>
@@ -251,7 +302,7 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
                             w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none 
                             text-white font-quicksand" onClick={async () => {
                                 try {
-                                    console.log(uploadedImages)
+                                    console.log(selectedServices)
                                 } catch(err) {
                                     console.error(err)
                                 }  
@@ -272,6 +323,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const user = await loggedUser()
     const countries = await prisma.stati.findMany()
     const cities = await prisma.citta.findMany()
+    const services = await prisma.servizi.findMany()
+    const rules = await prisma.regole.findMany()
 
     return {
         props: {
@@ -283,7 +336,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 CodiceHost: user?.CodiceHost
             },
             stati: countries,
-            citta: cities
+            citta: cities,
+            servizi: services,
+            regole: rules
         }
     }
 }

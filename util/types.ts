@@ -70,6 +70,10 @@ export interface Citta {
     Nome: string
 }
 
+export interface Servizio {
+    Nome: string
+}
+
 export interface Annuncio {
     CodiceAlloggio: number,
     Titolo: string,
