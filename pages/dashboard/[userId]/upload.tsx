@@ -14,7 +14,7 @@ interface PageProps {
 }
 
 const Upload: NextPage<PageProps> = (props: PageProps) => {
-  const [uploadedImages, setUploadedImages] = useState([])
+  const [uploadedImages, setUploadedImages] = useState<any>([])
 
   const onDrop = useCallback((acceptedFiles: any[]) => {
     const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`
@@ -33,7 +33,8 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
         })
 
         const data = await response.json()
-        console.log(data)
+
+        setUploadedImages((old: any) => [...old, data])
     })
   }, [])
 
@@ -250,12 +251,7 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
                             w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none 
                             text-white font-quicksand" onClick={async () => {
                                 try {
-                                    //const res = await sendData(images)
-
-                                    // if(res) {
-                                    //     alert("Immagini inviate con successo!")
-                                    // }
-
+                                    console.log(uploadedImages)
                                 } catch(err) {
                                     console.error(err)
                                 }  
