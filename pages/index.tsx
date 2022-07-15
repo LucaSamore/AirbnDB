@@ -1,12 +1,14 @@
 import type { NextPage } from 'next'
 import type { GetStaticProps } from 'next'
-import type { AnnuncioCard } from '../util/types'
+import type { AnnuncioCard, LoggedUser } from '../util/types'
 import { prisma } from '../util/db'
 import Head from "next/head"
 import Header from "../components/Header"
 import Card from '../components/Card'
+import { loggedUser } from '../util/loggedUser'
 
 interface PageProps {
+  loggedUser: LoggedUser,
   annunci: AnnuncioCard[]
 }
 
@@ -17,7 +19,7 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
         <title> AirbnDB - Home </title>
         <link rel="icon" href="/airbnDB.ico" />
       </Head>
-      <Header />
+      <Header userId={props.loggedUser.Codice} />
       <section className="flex flex-col items-center gap-5 mt-12 text-white font-quicksand">
         <h1 className="font-bold text-6xl">Benvenuto su AirbnDB</h1>
         <p className="text-xl">Questa applicazione è stata realizzata come progetto per il corso di Basi di Dati.</p>
@@ -46,6 +48,7 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
+  const user = await loggedUser()
   const stays = await prisma.annunci.findMany({
     where: {
       Disponibile: true,
@@ -76,6 +79,13 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
       props: {
+          loggedUser: {
+            Codice: user?.Codice,
+            Nome: user?.Nome,
+            Cognome: user?.Cognome,
+            Email: user?.Email,
+            CodiceHost: user?.CodiceHost
+          },
           annunci: staysWithAvgReview
       }
   }

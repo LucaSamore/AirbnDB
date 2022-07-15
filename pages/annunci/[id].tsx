@@ -62,7 +62,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
             <title> AirbnDB - Annuncio </title>
             <link rel="icon" href="/airbnDB.ico" />
         </Head>
-        <Header />
+        <Header userId={props.loggedUser.Codice} />
 
         <section className="flex flex-col gap-4 mx-auto mt-12 w-3/4 items-center">
             <h1 className="text-6xl font-bold text-white font-quicksand p-5">{props.accommodation.Titolo}</h1>
