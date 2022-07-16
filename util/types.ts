@@ -20,6 +20,8 @@ interface Host extends Cliente {
     LingueParlate: string[]
 }
 
+export type PartialUser = Partial<Host>
+
 export type LoggedUser = Omit<Cliente, "DataCreazione" | "DataNascita" | "Password" | "Telefono">
 
 export type DisplayHost = Pick<Host, "CodiceCliente" | "Biografia" | "LingueParlate" | "Nome" | "Cognome" | "Email">
@@ -71,6 +73,10 @@ export interface Citta {
 }
 
 export interface Servizio {
+    Nome: string
+}
+
+export interface Lingua {
     Nome: string
 }
 

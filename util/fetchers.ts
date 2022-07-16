@@ -96,3 +96,7 @@ export async function getImages(id:number) {
         }
     })
 }
+
+export async function getLanguages() {
+    return await prisma.lingue.findMany()
+}
