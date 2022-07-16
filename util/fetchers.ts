@@ -1,4 +1,5 @@
 import { prisma } from './db'
+import { clienti } from '@prisma/client';
 
 export async function getAccommodation(id: number) {
     return await prisma.annunci.findUnique({
@@ -99,4 +100,28 @@ export async function getImages(id:number) {
 
 export async function getLanguages() {
     return await prisma.lingue.findMany()
+}
+
+export async function getUserMessages(userId: string | undefined) {
+    return await prisma.messaggi.findMany({
+        where: {
+            Cliente: userId
+        },
+        orderBy: {
+            DataOra: 'desc'
+        }
+    })
+}
+
+export async function getUserById(id: string) {
+    return await prisma.clienti.findUnique({
+        where: {
+            Codice: id,
+        },
+        select: {
+            Nome: true,
+            Cognome: true,
+            Email: true
+        }
+    })
 }

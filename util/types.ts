@@ -25,6 +25,7 @@ export type PartialUser = Partial<Host>
 export type LoggedUser = Omit<Cliente, "DataCreazione" | "DataNascita" | "Password" | "Telefono">
 
 export type DisplayHost = Pick<Host, "CodiceCliente" | "Biografia" | "LingueParlate" | "Nome" | "Cognome" | "Email">
+
 export interface Recensione {
     CodicePrenotazione: number,
     Descrizione: string,
@@ -78,6 +79,17 @@ export interface Servizio {
 
 export interface Lingua {
     Nome: string
+}
+
+export interface DisplayMessaggio {
+    Codice: number,
+    Contenuto: string,
+    DataOra: string,
+    Cliente: string,
+    Host: string,
+    Nome: string,
+    Cognome: string,
+    Email: string
 }
 
 export interface Annuncio {
