@@ -51,7 +51,7 @@ const Reservations: NextPage<PageProps> = (props: PageProps) => {
                                 props.reservations.map((r, key) => {
                                     return(
                                         <tr key={key} className="text-center">
-                                            <th className="bg-dark-mode-3">{!isEditable(r.DataInizioSoggiorno, r.Transazione[0].Stato) ? <EditReservationModal reservationId={r.Codice} /> : <p>❌</p>}</th>
+                                            <th className="bg-dark-mode-3">{isEditable(r.DataInizioSoggiorno, r.Transazione[0].Stato) ? <EditReservationModal reservationId={r.Codice} /> : <p>❌</p>}</th>
                                             <td className="bg-dark-mode-3">{r.DataInizioSoggiorno}</td>
                                             <td className="bg-dark-mode-3">{r.DataFineSoggiorno}</td>
                                             <td className="bg-dark-mode-3">{r.NumeroAdulti}</td>
