@@ -37,11 +37,6 @@ const Header: React.FC<ComponentProps> = (props: ComponentProps) => {
                         Accedi
                     </button>
                 </Link>
-                <Link href={`/dashboard/${props.userId}/home`}>
-                    <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm transition ease-in-out delay-250 hover:scale-110">
-                        Dashboard
-                    </button>
-                </Link>
             </div>
         </header>
     )

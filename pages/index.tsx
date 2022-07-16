@@ -6,6 +6,7 @@ import Head from "next/head"
 import Header from "../components/Header"
 import Card from '../components/Card'
 import { loggedUser } from '../util/loggedUser'
+import Link from 'next/link'
 
 interface PageProps {
   loggedUser: LoggedUser,
@@ -23,7 +24,12 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
       <section className="flex flex-col items-center gap-5 mt-12 text-white font-quicksand">
         <h1 className="font-bold text-6xl">Benvenuto su AirbnDB</h1>
         <p className="text-xl">Questa applicazione è stata realizzata come progetto per il corso di Basi di Dati.</p>
-        <p className="text-xl"> Per favore, non usarla seriamente! :)</p>
+        <p className="text-xl"> Per favore, non usarla seriamente! 😊</p>
+        <Link href={`/dashboard/${props.loggedUser.Codice}/home`}>
+          <button className="px-4 py-2 border-none rounded-full font-bold text-white font-quicksand bg-gradient-to-r from-red-500 to-pink-500 text-sm transition ease-in-out delay-250 hover:scale-110">
+              Accedi all&apos;area personale
+          </button>
+        </Link>
       </section>
       <section className="flex flex-col gap-5 mx-auto mt-12 bg-dark-mode-2 rounded-xl w-3/4">
         <h2 className="px-16 pt-12 font-quicksand font-bold text-4xl text-white">Travel like a human</h2>
