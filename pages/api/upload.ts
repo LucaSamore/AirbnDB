@@ -1,12 +1,11 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../util/db'
 
 const findHosts = async (emails: string[]) => {
     const users = await prisma.clienti.findMany()
 
-    return users.filter(u => emails.includes(u.Email))
-                .filter(u => u.CodiceHost !== null)
+    return users.filter(u => u.CodiceHost !== null)
+                .filter(u => emails.includes(u.Email))
                 .map(u => u.Codice)
 }
 
