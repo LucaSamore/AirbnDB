@@ -21,7 +21,7 @@ const SideMenu: React.FC<ComponentProps> = (props: ComponentProps) => {
                             alt="logo"
                     />
                     <li className="mt-24"><a>Diventa Host 🦸‍♂️🦸‍♀️</a></li>
-                    <li><a>Modifica i tuoi dati ✍</a></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/modifyUserData`}>Modifica i tuoi dati ✍</Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/upload`}>Crea un annuncio 🔧</Link></li>
                     <li><a>Modifica annunci ✍</a></li>
                     <li><a>Prenotazioni e pagamenti 🤑</a></li>

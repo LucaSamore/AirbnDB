@@ -331,16 +331,18 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
                                 </div>
                             </td>
                         </tr>
-                        <th className="bg-dark-mode-3">20</th>
+                        <tr>
+                            <th className="bg-dark-mode-3">20</th>
                             <td className="bg-dark-mode-3">Host e co-host</td>
                             <td className="flex flex-col gap-4 bg-dark-mode-3">
                                 <input type="email" required placeholder="Email host 1" className="input input-bordered w-full max-w-xs bg-dark-mode-3" onChange={(e) => setFirstHost(e.target.value)} />
                                 <input type="email" placeholder="Email host 2" className="input input-bordered w-full max-w-xs bg-dark-mode-3" onChange={(e) => setSecondHost(e.target.value)} />
                                 <input type="email" placeholder="Email host 3" className="input input-bordered w-full max-w-xs bg-dark-mode-3" onChange={(e) => setThirdHost(e.target.value)} />
                             </td>
+                        </tr>
                         <tr>
-                            <th className="bg-dark-mode-3"></th>
-                            <td className="bg-dark-mode-3"></td>
+                            <th className="bg-dark-mode-3">21</th>
+                            <td className="bg-dark-mode-3">Crea un nuovo annuncio</td>
                             <td className="bg-dark-mode-3">
                             <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg 
                             w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none 
