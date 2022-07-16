@@ -53,7 +53,6 @@ const Messages: NextPage<PageProps> = (props: PageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async() => {
     const user = await loggedUser()
-
     const messages = (await Promise.all((await getUserMessages(user?.Codice))
         .map(async m => ({
             ...m,
@@ -72,8 +71,6 @@ export const getServerSideProps: GetServerSideProps = async() => {
             Cognome: m.Cognome,
             Email: m.Email
         }))
-
-    console.log(messages)
 
     return {
         props: {

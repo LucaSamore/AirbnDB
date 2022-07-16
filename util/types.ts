@@ -121,3 +121,21 @@ interface AnnuncioConVotoMedio extends Annuncio {
 }
 
 export type AnnuncioCard = Pick<AnnuncioConVotoMedio, "CodiceAlloggio" | "Titolo" | "PrezzoPerNotte" | "MediaRecensioni">
+
+export interface DisplayTransazione {
+    PrezzoFinale: number,
+    Stato: string,
+    MetodoPagamento: string,
+    CodiceSconto: string | null | undefined
+}
+
+export interface DisplayPrenotazione {
+    Codice: number,
+    DataInizioSoggiorno: string,
+    DataFineSoggiorno: string,
+    NumeroAdulti: number,
+    NumeroBambini: number,
+    NumeroNeonati: number,
+    NumeroAnimali: number,
+    Transazione: DisplayTransazione[]
+}

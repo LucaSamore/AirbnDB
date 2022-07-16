@@ -103,6 +103,7 @@ export async function getLanguages() {
 }
 
 export async function getUserMessages(userId: string | undefined) {
+
     return await prisma.messaggi.findMany({
         where: {
             Cliente: userId
@@ -111,6 +112,26 @@ export async function getUserMessages(userId: string | undefined) {
             DataOra: 'desc'
         }
     })
+}
+
+export async function getUserReservations(userId: string | undefined) {
+
+    return await prisma.prenotazioni.findMany({
+        where: {
+            CodiceCliente: userId
+        },
+        include: {
+            transazioni: {
+                select: {
+                    PrezzoFinale: true,
+                    Stato: true,
+                    MetodoPagamento: true,
+                    CodiceSconto: true
+                }
+            }
+        }
+    })
+
 }
 
 export async function getUserById(id: string) {
