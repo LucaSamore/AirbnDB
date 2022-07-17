@@ -20,7 +20,7 @@ const Dashboard: NextPage<PageProps> = (props: PageProps) => {
             <section className="basis-3/4 px-12">
                 <h1 className="text-white font-bold font-quicksand text-7xl mt-16">Ciao {props.loggedUser.Nome}!</h1>
                 <div className="w-3/4 mt-8">
-                    <p className="font-quicksand text-white text-xl">In questa sezione dell&apos;applicazione potrai modificare i tuoi dati personali, visualizzare le prenotazioni e i pagamenti che hai effettuato e tutti i messaggi scambiati con i nostri host.
+                    <p className="font-quicksand text-white text-xl">In questa sezione dell&apos;applicazione potrai modificare i tuoi dati personali, scrivere o modificare recensioni, visualizzare le prenotazioni e i pagamenti che hai effettuato e tutti i messaggi scambiati con i nostri host.
                         Potrai inoltre potenziare il tuo account come utente host e creare/modificare annunci. </p>
                 </div>
             </section>

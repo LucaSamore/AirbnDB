@@ -150,3 +150,18 @@ export async function getUserById(id: string) {
 export async function getPaymentMethods() {
     return await prisma.metodi_pagamento.findMany()
 }
+
+export async function getReviewables(userId: string | undefined) {
+    return (await prisma.prenotazioni.findMany({
+        where: {
+            CodiceCliente: userId
+        },
+        include: {
+            recensioni: {
+                include: {
+                    annunci: true
+                }
+            }
+        }
+    })).filter(p => p.recensioni !== null)
+}

@@ -20,14 +20,14 @@ const SideMenu: React.FC<ComponentProps> = (props: ComponentProps) => {
                             height={50} 
                             alt="logo"
                     />
-                    <li className="mt-24"><a>Diventa Host 🦸‍♂️🦸‍♀️</a></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/modifyUserData`}>Modifica i tuoi dati 👨‍💻</Link></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/upload`}>Crea un annuncio 👷‍♂️</Link></li>
+                    <li className="mt-24"><a className="active:bg-transparent">Diventa Host 🦸‍♂️🦸‍♀️</a></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/modifyUserData`}><a className="active:bg-transparent">Modifica i tuoi dati 👨‍💻</a></Link></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/upload`}><a className="active:bg-transparent">Crea un annuncio 👷‍♂️</a></Link></li>
                     <li><a>Modifica annunci 🔧</a></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/reservations`}>Prenotazioni e pagamenti 🤑</Link></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/messages`}>Messaggi 📫</Link></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/writeReview`}>Scrivi una recensione ✍</Link></li>
-                    <li><Link href="/">Torna alla home 🏠</Link></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/reservations`}><a className="active:bg-transparent">Prenotazioni e pagamenti 🤑</a></Link></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/messages`}><a className="active:bg-transparent">Messaggi 📫</a></Link></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/writeReview`}><a className="active:bg-transparent">Scrivi una recensione ✍</a></Link></li>
+                    <li><Link href="/"><a className="active:bg-transparent">Torna alla home 🏠</a></Link></li>
                 </ul>
             </div>
         </div>

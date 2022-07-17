@@ -88,7 +88,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   const [message, setMessage] = useState<string>("")
   const [checkIn, setCheckIn] = useState<Date>(new Date())
   const [checkOut, setCheckOut] = useState<Date>(new Date())
-  const [numberOfAdults, setNumberOfAdults] = useState<number>(0)
+  const [numberOfAdults, setNumberOfAdults] = useState<number>(1)
   const [numberOfChildren, setNumberOfChildren] = useState<number>(0)
   const [numberOfInfants, setNumberOfInfants] = useState<number>(0)
   const [numberOfAnimals, setNumberOfAnimals] = useState<number>(0)
@@ -192,7 +192,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </label>
                         <label className="label">
                             <span className="label-text text-white text-lg py-2 font-quicksand">Numero adulti</span>
-                            <input type="number" placeholder="Numero adulti" className="input input-bordered w-1/2 bg-dark-mode-3" min="0" max="16" 
+                            <input type="number" placeholder="Numero adulti" className="input input-bordered w-1/2 bg-dark-mode-3" min="1" max="16" 
                                 onChange={(e) => setNumberOfAdults(parseInt(e.target.value))}/>
                         </label>
                         <label className="label">

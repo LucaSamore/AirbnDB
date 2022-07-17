@@ -148,3 +148,11 @@ export interface Sconto {
     Codice: string,
     Percentuale: number
 }
+
+export interface Recensibile {
+    CodicePrenotazione: number,
+    CodiceAnnuncio: number,
+    DataInizioSoggiorno: string,
+    DataFineSoggiorno: string,
+    Titolo: string | null
+}
