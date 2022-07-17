@@ -135,39 +135,38 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                 </div>
             </div>
 
-            <div className="grid card bg-dark-mode-2 rounded-box place-items-center w-full p-8">
-                <h2 className="text-4xl font-bold text-white font-quicksand">Descrizione</h2>
-                <p className="text-xl text-white font-quicksand mt-6">{props.accommodation.Descrizione}</p>
-            </div>
-
             <div className="flex flex-col w-full lg:flex-row">
                 <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center pb-4 mr-4">
-                    <h3 className="text-2xl text-white font-quicksand font-bold pt-4 pb-2">Info alloggio</h3>
-                    <div className="flex flex-col justify-between gap-2 p-2 font-quicksand">
-                        <div className="flex gap-4 text-xl">
-                            <p className="font-bold">Tipologia alloggio:</p>
-                            <p>{props.accommodation.alloggi.Tipologia}</p>
-                        </div>
-                        <div className="flex gap-4 text-xl">
-                            <p className="font-bold">Indirizzo:</p>
-                            <p>{props.position.Via} {props.position.Civico}, {props.position.Citta} {props.position.CAP}, {props.position.Stato}</p>
-                        </div>
-                        <div className="flex gap-4 text-lg">
-                            <p className="font-bold">Numero persone ospitabili:</p>
-                            <p>{props.accommodation.alloggi.NumeroOspitabili}</p>
-                        </div>
-                        <div className="flex gap-4 text-lg">
-                            <p className="font-bold">Numero bagni:</p>
-                            <p>{props.accommodation.alloggi.NumeroBagni}</p>
-                        </div>
-                        <div className="flex gap-4 text-lg">
-                            <p className="font-bold">Numero camere da letto:</p>
-                            <p>{props.accommodation.alloggi.NumeroCamereLetto}</p>
-                        </div>
-                        <div className="flex gap-4 text-lg">
-                            <p className="font-bold">Numero letti:</p>
-                            <p>{props.accommodation.alloggi.NumeroLetti}</p>
-                        </div>
+                    <h3 className="text-2xl text-white font-quicksand font-bold pt-4">Informazioni sull&apos;alloggio</h3>
+                    <div className="form-control w-5/6 pb-6">
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Descrizione</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.Descrizione}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Tipologia alloggio</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.Tipologia}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Indirizzo</span>
+                            <span className="label-text text-white text-sm py-2 font-quicksand">{props.position.Via} {props.position.Civico}, {props.position.Citta} {props.position.CAP}, {props.position.Stato}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero persone ospitabili</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroOspitabili}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero bagni</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroBagni}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero camere da letto</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroCamereLetto}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero letti</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroLetti}</span>
+                        </label>
                     </div>
                 </div> 
                 <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center">
