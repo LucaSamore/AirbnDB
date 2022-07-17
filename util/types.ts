@@ -156,3 +156,16 @@ export interface Recensibile {
     DataFineSoggiorno: string,
     Titolo: string | null
 }
+
+export interface DisplayRecensione {
+    CodicePrenotazione: number,
+    Descrizione: string,
+    VotoPrecisione: number,
+    VotoComunicazione: number,
+    VotoPosizione: number,
+    VotoQualitaPrezzo: number,
+    VotoCheckIn: number,
+    VotoPulizia: number,
+    CodiceAnnuncio: number,
+    Titolo: string
+}

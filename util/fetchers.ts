@@ -162,7 +162,9 @@ export async function getReviewables(userId: string | undefined) {
     })).filter(p => p.recensioni === null)
 }
 
-export async function getTitleById(id: number) {
+export async function getTitleById(id: number | undefined) {
+    if(id === undefined) return
+
     return await prisma.annunci.findUnique({
         where: {
             CodiceAlloggio: id
@@ -171,4 +173,16 @@ export async function getTitleById(id: number) {
             Titolo: true
         }
     })
+}
+
+export async function getReviewsByUserId(id: string | undefined) {
+    return (await prisma.prenotazioni.findMany({
+        where: {
+            CodiceCliente: id
+        },
+        include: {
+            recensioni: true
+        }
+    })).filter(p => p.recensioni !== null)
+       .map(r => r.recensioni)
 }

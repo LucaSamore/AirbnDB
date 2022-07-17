@@ -26,7 +26,7 @@ const SideMenu: React.FC<ComponentProps> = (props: ComponentProps) => {
                     <li><a>Modifica annunci 🔧</a></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/reservations`}><a className="active:bg-transparent">Prenotazioni e pagamenti 🤑</a></Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/messages`}><a className="active:bg-transparent">Messaggi 📫</a></Link></li>
-                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/writeReview`}><a className="active:bg-transparent">Scrivi una recensione ✍</a></Link></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/writeReview`}><a className="active:bg-transparent">Recensioni 👨‍⚖️👩‍⚖️</a></Link></li>
                     <li><Link href="/"><a className="active:bg-transparent">Torna alla home 🏠</a></Link></li>
                 </ul>
             </div>
