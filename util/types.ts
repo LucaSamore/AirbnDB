@@ -143,3 +143,8 @@ export interface DisplayPrenotazione {
 export interface MetodoPagamento {
     Metodo: string
 }
+
+export interface Sconto {
+    Codice: string,
+    Percentuale: number
+}

@@ -14,7 +14,8 @@ import {
     DisplayHost, 
     Luogo, 
     Recensione, 
-    MetodoPagamento
+    MetodoPagamento,
+    Sconto
 } from '../../util/types'
 import {
     getAccommodation,
@@ -26,6 +27,7 @@ import {
     getImages,
     getPaymentMethods
 } from '../../util/fetchers'
+import { generateDiscountCode } from '../../util/discount'
 
 interface PageProps {
     loggedUser: LoggedUser
@@ -91,8 +93,8 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   const [numberOfInfants, setNumberOfInfants] = useState<number>(0)
   const [numberOfAnimals, setNumberOfAnimals] = useState<number>(0)
   const [paymentMethod, setPaymentMethod] = useState<string>("")
-  const [discoutCode, setDiscountCode] = useState<string>("")
-  const [totalCost, setTotalCost] = useState<number>(0)
+  const [discountCode, setDiscountCode] = useState<Sconto | null>(null)
+  const [codes, setCodes] = useState<Sconto[]>(generateDiscountCode(10))
 
   return (
     <>
@@ -211,7 +213,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         <label className="label">
                             <span className="label-text text-white text-lg py-2 font-quicksand">Metodo di pagamento</span>
                             <select required className="select select-bordered w-1/2 max-w-xs bg-dark-mode-3" onChange={(e) => setPaymentMethod(e.target.value)}>
-                                    <option disabled selected>Seleziona</option>
+                                    <option disabled defaultValue={"Seleziona"}>Seleziona</option>
                                     {
                                         props.paymentMethods.map((pm, key) => {
                                             return(
@@ -223,12 +225,37 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </label>
                         <label className="label">
                             <span className="label-text text-white text-lg py-2 font-quicksand">Codice sconto</span>
-                            <input type="text" placeholder="Codice sconto" className="input input-bordered w-1/2 bg-dark-mode-3"
-                                onChange={(e) => setDiscountCode(e.target.value)}/>
+                            <div className="input-group w-1/2">
+                                <input type="text" placeholder="Codice sconto" className="input input-bordered w-full bg-dark-mode-3"
+                                    onChange={(e) => {
+                                        const el = codes.find(code => code.Codice === e.target.value)
+                                        setDiscountCode(el !== undefined ? el : null)
+                                    }
+                                }/>
+                                <label htmlFor="codes" className="btn btn-square modal-button rounded-r-lg bg-gradient-to-r from-red-500 to-pink-500 text-lg border-none hover:border-none">
+                                    🤩
+                                </label>
+                                <input type="checkbox" id="codes" className="modal-toggle" />
+                                <label htmlFor="codes" className="modal cursor-pointer">
+                                <label className="modal-box relative w-full no-scrollbar overflow-y-auto bg-dark-mode-3 font-quicksand text-white" htmlFor="codes">
+                                    <h3 className="text-lg font-bold">Codici sconto DEMO</h3>
+                                    {
+                                        codes.map((c, key) => {
+                                            return(
+                                                <div key={key} className="flex">
+                                                    <p className="w-3/4 my-4 cursor-text">{c.Codice}</p>
+                                                    <button className="btn w-1/4 bg-transparent border-none hover:bg-transparent" onClick={() => navigator.clipboard.writeText(c.Codice)}>COPIA</button>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </label>
+                                </label>
+                            </div>
                         </label>
                         <label className="label">
                             <span className="label-text text-white text-lg py-2 font-quicksand">Prezzo finale</span>
-                            <span id="#totalCost" className="label-text text-white text-lg py-2 font-quicksand pr-4">€ {
+                            <span className="label-text text-white text-lg py-2 font-quicksand pr-4">€ {
                                 getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte)
                             }</span>
                         </label>
@@ -247,8 +274,9 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                     numberOfInfants: numberOfInfants,
                                     numberOfAnimals: numberOfAnimals,
                                     paymentMethod: paymentMethod,
-                                    discoutCode: discoutCode,
-                                    totalCost: getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte),
+                                    discountCode: discountCode,
+                                    totalCost: discountCode === null ? getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) 
+                                                                    : (getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) * ((100 - discountCode.Percentuale) / 100)).toFixed(2),
                                     clientId: props.loggedUser.Codice,
                                     accommodationId: props.accommodation.CodiceAlloggio,
                                     hostId: props.hosts[0].CodiceCliente

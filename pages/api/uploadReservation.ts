@@ -7,6 +7,8 @@ export default async function handler(
 ) {
     const reservation = JSON.parse(req.body)
 
+    console.log(reservation.discountCode)
+
     try {
 
         const savedReservation = await prisma.prenotazioni.create({
@@ -22,14 +24,23 @@ export default async function handler(
             }
         })
 
+        if(reservation.discountCode !== null || reservation.discountCode !== undefined) {
+            await prisma.sconti.create({
+                data: {
+                    Codice: reservation.discountCode.Codice,
+                    Percentuale: reservation.discountCode.Percentuale
+                }
+            })
+        }
+
         const transaction = await prisma.transazioni.create({
             data: {
                 CodicePrenotazione: savedReservation.Codice,
                 CodiceHost: reservation.hostId,
-                Stato: "Non completato",
+                Stato: "In corso",
                 PrezzoFinale: reservation.totalCost,
                 MetodoPagamento: reservation.paymentMethod,
-                CodiceSconto: reservation.discountCode
+                CodiceSconto: reservation.discountCode.Codice
             }
         })
 
