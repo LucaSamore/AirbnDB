@@ -3,7 +3,7 @@ import Head from 'next/head'
 import { loggedUser } from '../../../util/loggedUser'
 import { LoggedUser, Recensibile } from '../../../util/types';
 import SideMenu from '../../../components/SideMenu'
-import { getReviewables } from '../../../util/fetchers'
+import { getReviewables, getTitleById } from '../../../util/fetchers'
 import CreateReviewModal from '../../../components/CreateReviewModal';
 
 interface PageProps {
@@ -59,7 +59,7 @@ const WriteReview: NextPage<PageProps> = (props: PageProps) => {
 
 export const getServerSideProps: GetServerSideProps = async() => {
     const user = await loggedUser()
-    const reviewables = (await getReviewables(user?.Codice)).map(r => ({
+    const reviewables = await Promise.all((await getReviewables(user?.Codice)).map(async r => ({
         CodicePrenotazione: r.Codice,
         CodiceAnnuncio: r.CodiceAnnuncio,
         DataInizioSoggiorno: r.DataInizioSoggiorno.toISOString()
@@ -70,8 +70,10 @@ export const getServerSideProps: GetServerSideProps = async() => {
                                               .replace("T", " ")
                                               .replace("Z", "")
                                               .replace("00:00:00.000", ""),
-        Titolo: r.recensioni?.annunci.Titolo
-    }))
+        Titolo: (await getTitleById(r.CodiceAnnuncio))?.Titolo
+    })))
+
+    console.log(reviewables)
 
     return {
         props: {

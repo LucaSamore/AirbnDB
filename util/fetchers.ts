@@ -157,11 +157,18 @@ export async function getReviewables(userId: string | undefined) {
             CodiceCliente: userId
         },
         include: {
-            recensioni: {
-                include: {
-                    annunci: true
-                }
-            }
+            recensioni: true
         }
-    })).filter(p => p.recensioni !== null)
+    })).filter(p => p.recensioni === null)
+}
+
+export async function getTitleById(id: number) {
+    return await prisma.annunci.findUnique({
+        where: {
+            CodiceAlloggio: id
+        },
+        select: {
+            Titolo: true
+        }
+    })
 }
