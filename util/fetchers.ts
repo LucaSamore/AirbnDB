@@ -1,5 +1,4 @@
 import { prisma } from './db'
-import { clienti } from '@prisma/client';
 
 export async function getAccommodation(id: number) {
     return await prisma.annunci.findUnique({
@@ -185,4 +184,51 @@ export async function getReviewsByUserId(id: string | undefined) {
         }
     })).filter(p => p.recensioni !== null)
        .map(r => r.recensioni)
+}
+
+export async function getAccommodationsByUserId(id: string | undefined) {
+    return (await prisma.possedimenti.findMany({
+        where: {
+            CodiceHost: id
+        },
+        include: {
+            alloggi: {
+                include: {
+                    annunci: true
+                }
+            }
+        }
+    })).map(async a => ({
+        ...a.alloggi,
+        servizi: await prisma.annunci_servizi.findMany({
+            where: {
+                CodiceAnnuncio: a.CodiceAlloggio
+            },
+            select: {
+                NomeServizio: true,
+                Incluso: true
+            }
+        }),
+        regole: (await prisma.annunci_regole.findMany({
+            where: {
+                CodiceAnnuncio: a.CodiceAlloggio
+            },
+            include: {
+                regole: {
+                    include: {
+                        tipologie_regola: true
+                    }
+                }
+            }
+        })).map(r => ({
+            CodiceRegola: r.CodiceRegola,
+            Descrizione: r.regole.Descrizione,
+            Tipologia: r.regole.Tipologia
+        })),
+        immagini: await prisma.immagini.findMany({
+            where: {
+                CodiceAnnuncio: a.CodiceAlloggio
+            }
+        })
+    }))
 }

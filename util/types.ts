@@ -169,3 +169,16 @@ export interface DisplayRecensione {
     CodiceAnnuncio: number,
     Titolo: string
 }
+
+export interface Immagine {
+    Codice: number,
+    Percorso: string,
+    CodiceAnnuncio: number
+}
+
+export interface EditAnnuncio extends Alloggio {
+    annunci: Annuncio[],
+    servizi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
+    regole: Regola[],
+    immagini: Immagine[]
+}

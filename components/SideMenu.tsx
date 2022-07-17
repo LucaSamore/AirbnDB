@@ -23,7 +23,7 @@ const SideMenu: React.FC<ComponentProps> = (props: ComponentProps) => {
                     <li className="mt-24"><a className="active:bg-transparent">Diventa Host 🦸‍♂️🦸‍♀️</a></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/modifyUserData`}><a className="active:bg-transparent">Modifica i tuoi dati 👨‍💻</a></Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/upload`}><a className="active:bg-transparent">Crea un annuncio 👷‍♂️</a></Link></li>
-                    <li><a>Modifica annunci 🔧</a></li>
+                    <li><Link href={`/dashboard/${props.loggedUser.Codice}/modifyAccommodation`}><a className="active:bg-transparent">Modifica annunci 🔧</a></Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/reservations`}><a className="active:bg-transparent">Prenotazioni e pagamenti 🤑</a></Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/messages`}><a className="active:bg-transparent">Messaggi 📫</a></Link></li>
                     <li><Link href={`/dashboard/${props.loggedUser.Codice}/writeReview`}><a className="active:bg-transparent">Recensioni 👨‍⚖️👩‍⚖️</a></Link></li>
