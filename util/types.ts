@@ -176,9 +176,10 @@ export interface Immagine {
     CodiceAnnuncio: number
 }
 
-export interface EditAnnuncio extends Alloggio {
-    annunci: Annuncio[],
+interface ExtendedAnnuncio extends Alloggio, Annuncio {
     servizi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
     regole: Regola[],
     immagini: Immagine[]
 }
+
+export type EditAnnuncio = Omit<ExtendedAnnuncio, "CodiceAlloggio">

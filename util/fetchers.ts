@@ -199,7 +199,19 @@ export async function getAccommodationsByUserId(id: string | undefined) {
             }
         }
     })).map(async a => ({
-        ...a.alloggi,
+        Codice: a.alloggi.Codice,
+        Tipologia: a.alloggi.Tipologia,
+        NumeroOspitabili: a.alloggi.NumeroOspitabili,
+        NumeroBagni: a.alloggi.NumeroBagni,
+        NumeroCamereLetto: a.alloggi.NumeroCamereLetto,
+        NumeroLetti: a.alloggi.NumeroLetti,
+        Titolo: a.alloggi.annunci?.Titolo,
+        Descrizione: a.alloggi.annunci?.Descrizione,
+        Disponibile: a.alloggi.annunci?.Disponibile,
+        PrezzoPerNotte: a.alloggi.annunci?.PrezzoPerNotte.toNumber(),
+        CostoServizio: a.alloggi.annunci?.CostoServizio.toNumber(),
+        CostoPulizia: a.alloggi.annunci?.CostoPulizia.toNumber(),
+        Tasse: a.alloggi.annunci?.Tasse.toNumber(),
         servizi: await prisma.annunci_servizi.findMany({
             where: {
                 CodiceAnnuncio: a.CodiceAlloggio
