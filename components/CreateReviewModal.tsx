@@ -37,7 +37,7 @@ const displaySlider = (setState: any) => {
 const CreateReviewModal: React.FC<ComponentProps> = (props: ComponentProps) => {
     const [textReview, setTextReview] = useState<string>("")
     const [precisionVote, setPrecisionVote] = useState<number>(3)
-    const [comunicationVote, setComunicationVote] = useState<number>(3)
+    const [communicationVote, setCommunicationVote] = useState<number>(3)
     const [positionVote, setPositionVote] = useState<number>(3)
     const [qualityCostVote, setQualityCostVote] = useState<number>(3)
     const [checkInVote, setCheckInVote] = useState<number>(3)
@@ -62,7 +62,7 @@ const CreateReviewModal: React.FC<ComponentProps> = (props: ComponentProps) => {
                         
                         
                             <span className="label-text text-white text-lg py-2 font-quicksand">Voto comunicazione</span>
-                            {displaySlider(setComunicationVote)}
+                            {displaySlider(setCommunicationVote)}
                         
                         
                             <span className="label-text text-white text-lg py-2 font-quicksand">Voto posizione</span>
@@ -85,7 +85,21 @@ const CreateReviewModal: React.FC<ComponentProps> = (props: ComponentProps) => {
                         <label htmlFor={`modify-review-${props.reservationId}`} className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand"
                             onClick={async () => {
                                 try {
-                                    console.log(cleaningVote)
+                                    const res = await sendReview({
+                                        reservationId: props.reservationId,
+                                        textReview: textReview,
+                                        precisionVote: precisionVote,
+                                        communicationVote: communicationVote,
+                                        positionVote: positionVote,
+                                        qualityCostVote: qualityCostVote,
+                                        checkInVote: checkInVote,
+                                        cleaningVote: cleaningVote,
+                                        accommodationId: props.accommodationId
+                                    })
+
+                                    if(res) {
+                                        alert("Recensione inviata con successo!")
+                                    }
                                 } catch(err) {
                                     console.error(err)
                                 }
