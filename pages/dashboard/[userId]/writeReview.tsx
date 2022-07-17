@@ -77,7 +77,7 @@ const WriteReview: NextPage<PageProps> = (props: PageProps) => {
                                 props.reviews.map((r, key) => {
                                     return (
                                         <tr key={key} className="text-center">
-                                            <th className="bg-dark-mode-3"><EditReviewModal reservationId={r.CodicePrenotazione}/></th>
+                                            <th className="bg-dark-mode-3"><EditReviewModal reservation={r}/></th>
                                             <td className="bg-dark-mode-3">{r.Titolo}</td>
                                             <td className="bg-dark-mode-3 max-w-prose">{r.Descrizione}</td>
                                             <td className="bg-dark-mode-3">{r.VotoPrecisione}</td>
