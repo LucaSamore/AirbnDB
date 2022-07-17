@@ -86,8 +86,12 @@ const Upload: NextPage<PageProps> = (props: PageProps) => {
 
         <section className="flex flex-row justify-end">
             <SideMenu loggedUser={props.loggedUser}/>
-            <section className="basis-3/4 py-16 text-white font-quicksand">
-                <div className="overflow-x-auto">
+            <section className="basis-3/4 py-8 text-white font-quicksand">
+                <h1 className="text-white font-bold font-quicksand text-7xl mt-6">Crea un nuovo annuncio</h1>
+                <div className="w-3/4 mt-8">
+                    <p className="font-quicksand text-white text-xl">Compila la tabella sottostante per pubblicare un nuovo annuncio. </p>
+                </div>
+                <div className="overflow-x-auto mt-8">
                     <table className="table w-11/12">
                         <thead>
                             <tr>

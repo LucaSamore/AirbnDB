@@ -139,3 +139,7 @@ export interface DisplayPrenotazione {
     NumeroAnimali: number,
     Transazione: DisplayTransazione[]
 }
+
+export interface MetodoPagamento {
+    Metodo: string
+}

@@ -13,7 +13,8 @@ import {
     LoggedUser,
     DisplayHost, 
     Luogo, 
-    Recensione 
+    Recensione, 
+    MetodoPagamento
 } from '../../util/types'
 import {
     getAccommodation,
@@ -22,7 +23,8 @@ import {
     getPosition,
     getServices,
     getRules,
-    getImages
+    getImages,
+    getPaymentMethods
 } from '../../util/fetchers'
 
 interface PageProps {
@@ -33,7 +35,19 @@ interface PageProps {
     position: Luogo,
     services: AnnuncioServizio[],
     rules: AnnuncioRegola[],
-    images: string[]
+    images: string[],
+    paymentMethods: MetodoPagamento[]
+}
+
+const getTotalCost = (checkIn: Date, checkOut: Date, costPerNight: number) => {
+
+    if(checkIn.getTime() < new Date().getTime() || 
+        checkOut.getTime() < new Date().getTime() || 
+        checkIn.getTime() >= checkOut.getTime()) {
+            return 0
+        }
+
+    return ((checkOut.getTime() - checkIn.getTime())/(1000 * 3600 * 24)) * costPerNight
 }
 
 const sendMessage = async (message: string, clientId: string, hostId: string) => {
@@ -53,8 +67,32 @@ const sendMessage = async (message: string, clientId: string, hostId: string) =>
     return await res.json()
 }
 
+const sendReservation = async (data: any) => {
+    if(data.totalCost === 0) return false
+
+    const res = await fetch('/api/uploadReservation', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+
+    if(!res.ok) {
+        throw new Error(res.statusText)
+    }
+
+    return await res.json()
+}
+
 const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   const [message, setMessage] = useState<string>("")
+  const [checkIn, setCheckIn] = useState<Date>(new Date())
+  const [checkOut, setCheckOut] = useState<Date>(new Date())
+  const [numberOfAdults, setNumberOfAdults] = useState<number>(0)
+  const [numberOfChildren, setNumberOfChildren] = useState<number>(0)
+  const [numberOfInfants, setNumberOfInfants] = useState<number>(0)
+  const [numberOfAnimals, setNumberOfAnimals] = useState<number>(0)
+  const [paymentMethod, setPaymentMethod] = useState<string>("")
+  const [discoutCode, setDiscountCode] = useState<string>("")
+  const [totalCost, setTotalCost] = useState<number>(0)
 
   return (
     <>
@@ -103,12 +141,16 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
             </div>
 
             <div className="flex flex-col w-full lg:flex-row">
-                <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center pb-4">
+                <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center pb-4 mr-4">
                     <h3 className="text-2xl text-white font-quicksand font-bold pt-4 pb-2">Info alloggio</h3>
                     <div className="flex flex-col justify-between gap-2 p-2 font-quicksand">
                         <div className="flex gap-4 text-xl">
                             <p className="font-bold">Tipologia alloggio:</p>
                             <p>{props.accommodation.alloggi.Tipologia}</p>
+                        </div>
+                        <div className="flex gap-4 text-xl">
+                            <p className="font-bold">Indirizzo:</p>
+                            <p>{props.position.Via} {props.position.Civico}, {props.position.Citta} {props.position.CAP}, {props.position.Stato}</p>
                         </div>
                         <div className="flex gap-4 text-lg">
                             <p className="font-bold">Numero persone ospitabili:</p>
@@ -128,29 +170,120 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </div>
                     </div>
                 </div> 
-                <div className="divider lg:divider-horizontal"></div> 
-                <div className="grid flex-grow h-32 card bg-dark-mode-2 rounded-box place-items-center">content</div>
+                <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center">
+                    <h3 className="text-2xl text-white font-quicksand font-bold pt-4 pb-2">Prenota adesso</h3>
+                    <div className="form-control w-5/6 pb-6">
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Check-in</span>
+                            <input type="date" name="check-in" min="1900-01-01" max="2050-12-31" className="pl-5 border-white bg-transparent text-gray-400 outline-none rounded-full text-sm w-1/2"
+                                onChange={(e) => {
+                                    setCheckIn(new Date(e.target.value))
+                                }
+                            } />
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Check-out</span>
+                            <input type="date" name="check-out" min="1900-01-01" max="2050-12-31" className="pl-5 border-white bg-transparent text-gray-400 outline-none rounded-full text-sm w-1/2" 
+                                onChange={(e) => {
+                                    setCheckOut(new Date(e.target.value))
+                                }
+                            }/>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Numero adulti</span>
+                            <input type="number" placeholder="Numero adulti" className="input input-bordered w-1/2 bg-dark-mode-3" min="0" max="16" 
+                                onChange={(e) => setNumberOfAdults(parseInt(e.target.value))}/>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Numero bambini</span>
+                            <input type="number" placeholder="Numero bambini" className="input input-bordered w-1/2 bg-dark-mode-3" min="0" max="16" 
+                                onChange={(e) => setNumberOfChildren(parseInt(e.target.value))}/>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Numero neonati</span>
+                            <input type="number" placeholder="Numero neonati" className="input input-bordered w-1/2 bg-dark-mode-3" min="0" max="16"
+                                onChange={(e) => setNumberOfInfants(parseInt(e.target.value))} />
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Numero animali</span>
+                            <input type="number" placeholder="Numero animali" className="input input-bordered w-1/2 bg-dark-mode-3" min="0" max="16" 
+                                onChange={(e) => setNumberOfAnimals(parseInt(e.target.value))}/>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Metodo di pagamento</span>
+                            <select required className="select select-bordered w-1/2 max-w-xs bg-dark-mode-3" onChange={(e) => setPaymentMethod(e.target.value)}>
+                                    <option disabled selected>Seleziona</option>
+                                    {
+                                        props.paymentMethods.map((pm, key) => {
+                                            return(
+                                                <option key={key}>{pm.Metodo}</option>
+                                            )
+                                        })
+                                    }
+                            </select>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Codice sconto</span>
+                            <input type="text" placeholder="Codice sconto" className="input input-bordered w-1/2 bg-dark-mode-3"
+                                onChange={(e) => setDiscountCode(e.target.value)}/>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white text-lg py-2 font-quicksand">Prezzo finale</span>
+                            <span id="#totalCost" className="label-text text-white text-lg py-2 font-quicksand pr-4">€ {
+                                getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte)
+                            }</span>
+                        </label>
+                        <button className="ml-auto w-1/2 px-6
+                         py-3 mt-3 border-none 
+                         rounded-lg font-bold text-white 
+                         font-quicksand bg-gradient-to-r from-red-500 
+                         to-pink-500 text-sm transition 
+                         ease-in-out delay-250 hover:scale-110" onClick={async () => {
+                            try {
+                                const res = await sendReservation({
+                                    checkIn: checkIn,
+                                    checkOut: checkOut,
+                                    numberOfAdults: numberOfAdults,
+                                    numberOfChildren: numberOfChildren,
+                                    numberOfInfants: numberOfInfants,
+                                    numberOfAnimals: numberOfAnimals,
+                                    paymentMethod: paymentMethod,
+                                    discoutCode: discoutCode,
+                                    totalCost: getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) 
+                                })
+
+                                if(res) {
+                                    alert("Prenotazione inviata con successo!")
+                                } else {
+                                    alert("Seleziona correttamente le date!")
+                                }
+
+                            } catch (err) {
+                                console.error(err)
+                            }
+                         }}>
+                                Prenota
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div className="flex w-full">
-                <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center p-5">
-                    <h3 className="text-2xl text-white font-quicksand font-bold">Servizi</h3>
-                    <div className="overflow-x-auto w-3/4 mt-4 h-5/6">
+                <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center mr-4">
+                    <div className="overflow-x-auto w-5/6 h-5/6">
                         <table className="table w-full">
                             <thead>
                             <tr>
-                            <th></th>
-                            <th>Nome</th>
-                            <th>Incluso</th>
+                            <th className="bg-dark-mode-3">Servizio</th>
+                            <th className="bg-dark-mode-3">Incluso</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="font-quicksand text-white">
                                 {
                                     props.services.map((s, key) => {
                                         return (<tr key={key}>
-                                            <th>{key+1}</th>
-                                            <td>{s.NomeServizio}</td>
-                                            <td>{s.Incluso ? "SI" : "NO"}</td>
+                                            <td className="bg-dark-mode-4">{s.NomeServizio}</td>
+                                            <td className="bg-dark-mode-4">{s.Incluso ? "SI" : "NO"}</td>
                                         </tr>)
                                     })
                                 }
@@ -158,28 +291,25 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </table>
                     </div>
                 </div>
-                <div className="divider divider-horizontal"></div>
+
                 <div className="grid h-auto flex-grow card bg-dark-mode-2 rounded-box place-items-center p-5">
-                    <h3 className="text-2xl text-white font-quicksand font-bold">Regole</h3>
-                    <div className="overflow-x-auto w-5/6 mt-4">
+                    <div className="overflow-x-auto w-full mt-4">
                         <table className="table w-full">
                             <thead>
                             <tr>
-                            <th></th>
-                            <th>Descrizione</th>
-                            <th>Tipologia</th>
+                            <th className="bg-dark-mode-3">Regola</th>
+                            <th className="bg-dark-mode-3">Tipologia</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="font-quicksand text-white">
                                 {
                                     props.rules
                                         .map(r => r.regole)
                                         .map((r,key) => {
                                             return (
                                                 <tr key={key}>
-                                                <th>{key+1}</th>
-                                                <td>{r.Descrizione}</td>
-                                                <td>{r.Tipologia}</td>
+                                                <td className="bg-dark-mode-4">{r.Descrizione}</td>
+                                                <td className="bg-dark-mode-4">{r.Tipologia}</td>
                                                 </tr>
                                             )
                                         })
@@ -273,6 +403,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
     const services = await getServices(parseInt(id as string))
     const rules = await getRules(parseInt(id as string))
     const images = await getImages(parseInt(id as string))
+    const paymentMethods = await getPaymentMethods()
 
     const hosts: any[] = await Promise.all(accommodationHosts
         .flatMap(ah => ah.possedimenti)
@@ -321,7 +452,8 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
             position: position,
             services: services,
             rules: rules,
-            images: images
+            images: images,
+            paymentMethods: paymentMethods
         }
     }
 }

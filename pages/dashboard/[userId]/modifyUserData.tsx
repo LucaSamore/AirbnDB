@@ -47,7 +47,11 @@ const ModifyData: NextPage<PageProps> = (props: PageProps) => {
         <section className="flex flex-row justify-end">
             <SideMenu loggedUser={props.loggedUser}/>
             <section className="basis-3/4 py-16 text-white font-quicksand">
-                <div className="overflow-x-auto">
+                <h1 className="text-white font-bold font-quicksand text-7xl mt-6">Dati personali</h1>
+                <div className="w-3/4 mt-8">
+                    <p className="font-quicksand text-white text-xl">Utilizza la tabella sottostante per modificare i tuoi dati. </p>
+                </div>
+                <div className="overflow-x-auto mt-8">
                     <table className="table w-11/12">
                         <thead>
                             <tr>

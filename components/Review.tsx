@@ -21,7 +21,7 @@ const displayStars = (howMany: number) => {
                 [...Array(howMany)].map((n, key) => <input key={key} 
                                                            type="radio" 
                                                            name="rating-2" 
-                                                           className="mask mask-star-2 bg-orange-400" 
+                                                           className="mask mask-star-2 bg-orange-400 cursor-default" 
                                                            disabled/>)
             }
         </div>

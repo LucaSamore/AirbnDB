@@ -146,3 +146,7 @@ export async function getUserById(id: string) {
         }
     })
 }
+
+export async function getPaymentMethods() {
+    return await prisma.metodi_pagamento.findMany()
+}
