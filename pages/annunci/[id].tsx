@@ -249,7 +249,10 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                     numberOfAnimals: numberOfAnimals,
                                     paymentMethod: paymentMethod,
                                     discoutCode: discoutCode,
-                                    totalCost: getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) 
+                                    totalCost: getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte),
+                                    clientId: props.loggedUser.Codice,
+                                    accommodationId: props.accommodation.CodiceAlloggio,
+                                    hostId: props.hosts[0].CodiceCliente
                                 })
 
                                 if(res) {
