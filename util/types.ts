@@ -117,10 +117,11 @@ export interface AnnuncioAlloggio extends Annuncio {
 }
 
 interface AnnuncioConVotoMedio extends Annuncio {
-    MediaRecensioni: number
+    MediaRecensioni: number,
+    Immagine: string
 }
 
-export type AnnuncioCard = Pick<AnnuncioConVotoMedio, "CodiceAlloggio" | "Titolo" | "PrezzoPerNotte" | "MediaRecensioni">
+export type AnnuncioCard = Pick<AnnuncioConVotoMedio, "CodiceAlloggio" | "Titolo" | "PrezzoPerNotte" | "MediaRecensioni" | "Immagine">
 
 export interface DisplayTransazione {
     PrezzoFinale: number,

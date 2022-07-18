@@ -7,6 +7,7 @@ import Header from "../components/Header"
 import Card from '../components/Card'
 import { loggedUser } from '../util/loggedUser'
 import Link from 'next/link'
+import { getImages } from '../util/fetchers'
 
 interface PageProps {
   loggedUser: LoggedUser,
@@ -43,7 +44,8 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
                       CodiceAlloggio={a.CodiceAlloggio}
                       Titolo={a.Titolo} 
                       PrezzoPerNotte={a.PrezzoPerNotte} 
-                      MediaRecensioni={a.MediaRecensioni} />
+                      MediaRecensioni={a.MediaRecensioni} 
+                      Immagine={a.Immagine} />
               )
             })
           }
@@ -65,23 +67,24 @@ export const getStaticProps: GetStaticProps = async () => {
     take: 100
   })
 
-  const staysWithAvgReview: AnnuncioCard[] = 
-    stays.filter(s => s.recensioni.length !== 0)
+  const staysWithAvgReview: AnnuncioCard[] =
+    (await Promise.all(stays.filter(s => s.recensioni.length !== 0)
          .map(
-            s => ({
-            CodiceAlloggio: s.CodiceAlloggio,
-            Titolo: s.Titolo,
-            PrezzoPerNotte: s.PrezzoPerNotte.toNumber(),
-            MediaRecensioni: s.recensioni
-              .map(r => ((r.VotoPrecisione +
-                          r.VotoComunicazione +
-                          r.VotoPosizione +
-                          r.VotoQualitaPrezzo +
-                          r.VotoCheckIn +
-                          r.VotoPulizia)/6))
-              .reduce((x,y) => x + y, 0) / s.recensioni.length
-            }))
-         .sort((s1,s2) => s1.MediaRecensioni < s2.MediaRecensioni ? 1 : -1)
+            async s => ({
+              CodiceAlloggio: s.CodiceAlloggio,
+              Titolo: s.Titolo,
+              PrezzoPerNotte: s.PrezzoPerNotte.toNumber(),
+              MediaRecensioni: s.recensioni
+                .map(r => ((r.VotoPrecisione +
+                            r.VotoComunicazione +
+                            r.VotoPosizione +
+                            r.VotoQualitaPrezzo +
+                            r.VotoCheckIn +
+                            r.VotoPulizia)/6))
+                .reduce((x,y) => x + y, 0) / s.recensioni.length,
+              Immagine: (await getImages(s.CodiceAlloggio)).map(i => i.Percorso)[0]
+            })
+          ))).sort((s1,s2) => s1.MediaRecensioni < s2.MediaRecensioni ? 1 : -1)
 
   return {
       props: {

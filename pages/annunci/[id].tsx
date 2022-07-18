@@ -4,7 +4,7 @@ import Header from "../../components/Header"
 import type { GetServerSideProps } from 'next'
 import { prisma } from '../../util/db'
 import Review from '../../components/Review'
-import { loggedUser } from '../../util/loggedUser';
+import { loggedUser } from '../../util/loggedUser'
 import { useState } from 'react'
 import { 
     AnnuncioAlloggio, 
@@ -28,7 +28,8 @@ import {
     getPaymentMethods
 } from '../../util/fetchers'
 import { generateDiscountCode } from '../../util/discount'
-
+import { AdvancedImage } from '@cloudinary/react'
+import {Cloudinary} from "@cloudinary/url-gen"
 interface PageProps {
     loggedUser: LoggedUser
     accommodation: AnnuncioAlloggio,
@@ -96,6 +97,14 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
   const [discountCode, setDiscountCode] = useState<Sconto | null>(null)
   const [codes, setCodes] = useState<Sconto[]>(generateDiscountCode(10))
 
+  const cld = new Cloudinary({
+    cloud: {
+        cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    }
+  })
+
+  const image = cld.image(props.images[0])
+
   return (
     <>
         <Head>
@@ -106,36 +115,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
 
         <section className="flex flex-col gap-4 mx-auto mt-12 w-3/4 items-center">
             <h1 className="text-6xl font-bold text-white font-quicksand p-5">{props.accommodation.Titolo}</h1>
-            <div className="carousel w-full">
-                <div id="slide1" className="carousel-item relative w-full">
-                    <img src="https://placeimg.com/800/200/arch" className="w-full" />
-                        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                            <a href="#slide4" className="btn btn-circle">❮</a> 
-                            <a href="#slide2" className="btn btn-circle">❯</a>
-                        </div>
-                </div> 
-                <div id="slide2" className="carousel-item relative w-full">
-                    <img src="https://placeimg.com/800/200/arch" className="w-full" />
-                        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                            <a href="#slide1" className="btn btn-circle">❮</a> 
-                                <a href="#slide3" className="btn btn-circle">❯</a>
-                        </div>
-                </div> 
-                <div id="slide3" className="carousel-item relative w-full">
-                    <img src="https://placeimg.com/800/200/arch" className="w-full" />
-                        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                            <a href="#slide2" className="btn btn-circle">❮</a> 
-                            <a href="#slide4" className="btn btn-circle">❯</a>
-                        </div>
-                </div> 
-                <div id="slide4" className="carousel-item relative w-full">
-                    <img src="https://placeimg.com/800/200/arch" className="w-full" />
-                        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                            <a href="#slide3" className="btn btn-circle">❮</a> 
-                            <a href="#slide1" className="btn btn-circle">❯</a>
-                        </div>
-                </div>
-            </div>
+            <AdvancedImage cldImg={image} />
 
             <div className="flex flex-col w-full lg:flex-row">
                 <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center pb-4 mr-4">
@@ -482,7 +462,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
             position: position,
             services: services,
             rules: rules,
-            images: images,
+            images: images.map(i => i.Percorso),
             paymentMethods: paymentMethods
         }
     }

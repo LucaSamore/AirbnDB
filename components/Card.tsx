@@ -1,11 +1,22 @@
 import React from "react";
 import type { AnnuncioCard } from "../util/types";
 import Link from 'next/link'
+import { AdvancedImage } from '@cloudinary/react'
+import {Cloudinary} from "@cloudinary/url-gen";
 
 const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
+
+    const cld = new Cloudinary({
+        cloud: {
+            cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        }
+    })
+
+    const image = cld.image(props.Immagine)
+
     return (
         <div className="card w-96 bg-dark-mode-3 shadow-xl">
-            <figure><img src="https://placeimg.com/400/225/arch" alt="Shoes" /></figure>
+            <figure><AdvancedImage cldImg={image} /></figure>
             <div className="card-body">
                 <h2 className="card-title">{props.Titolo}</h2>
                 <p><b>Voto medio:</b> {props.MediaRecensioni.toFixed(1)}</p>
