@@ -1,13 +1,16 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { loggedUser } from '../../../util/loggedUser'
-import { LoggedUser, EditAnnuncio } from '../../../util/types';
+import { LoggedUser, EditAnnuncio, Citta, Stato } from '../../../util/types';
 import SideMenu from '../../../components/SideMenu'
-import { getAccommodationsByUserId } from '../../../util/fetchers'
+import { getAccommodationsByUserId, getCities, getCountries } from '../../../util/fetchers'
+import EditAccommodationModal from '../../../components/EditAccommodationModal';
 
 interface PageProps {
     loggedUser: LoggedUser,
-    accommodations: EditAnnuncio[]
+    accommodations: EditAnnuncio[],
+    cities: Citta[],
+    countries: Stato[]
 }
 
 const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
@@ -24,6 +27,36 @@ const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
                 <div className="w-3/4 mt-8">
                     <p className="font-quicksand text-white text-xl">In questa sezione puoi modificare gli annunci che hai pubblicato.</p>
                 </div>
+                <div className="overflow-x-auto mt-8">
+                    <table className="table no-scrollbar overflow-x-auto w-3/4">
+                        <thead>
+                            <tr className="text-center">
+                                <th className="bg-dark-mode-2">Modifica</th>
+                                <th className="bg-dark-mode-2">Titolo</th>
+                                <th className="bg-dark-mode-2">Tipologia</th>
+                                <th className="bg-dark-mode-2">Numero ospitabili</th>
+                                <th className="bg-dark-mode-2">Prezzo per notte</th>
+                                <th className="bg-dark-mode-2">Disponibile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                props.accommodations.map((a, key) => {
+                                    return (
+                                        <tr key={key} className="text-center">
+                                            <th className="bg-dark-mode-3"><EditAccommodationModal loggedUser={props.loggedUser} accommodation={a} cities={props.cities} countries={props.countries} /></th>
+                                            <td className="bg-dark-mode-3">{a.Titolo}</td>
+                                            <td className="bg-dark-mode-3">{a.Tipologia}</td>
+                                            <td className="bg-dark-mode-3">{a.NumeroOspitabili}</td>
+                                            <td className="bg-dark-mode-3">€ {a.PrezzoPerNotte}</td>
+                                            <td className="bg-dark-mode-3">{a.Disponibile ? "SI" : "NO"}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </section>
     </>
@@ -33,6 +66,8 @@ const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
 export const getServerSideProps: GetServerSideProps = async() => {
     const user = await loggedUser()
     const accommodations = await Promise.all(await getAccommodationsByUserId(user?.Codice))
+    const cities = await getCities()
+    const countries = await getCountries()
     console.log(accommodations[0])
 
     return {
@@ -44,7 +79,9 @@ export const getServerSideProps: GetServerSideProps = async() => {
                 Email: user?.Email,
                 CodiceHost: user?.CodiceHost
             },
-            accommodations: accommodations
+            accommodations: accommodations,
+            cities: cities,
+            countries: countries
         }
     }
 }

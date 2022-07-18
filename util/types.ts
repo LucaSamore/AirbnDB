@@ -178,8 +178,10 @@ export interface Immagine {
 
 interface ExtendedAnnuncio extends Alloggio, Annuncio {
     servizi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
+    serviziNonInclusi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
     regole: Regola[],
-    immagini: Immagine[]
+    immagini: Immagine[],
+    luogo: Omit<Luogo, "CodiceAlloggio">
 }
 
 export type EditAnnuncio = Omit<ExtendedAnnuncio, "CodiceAlloggio">

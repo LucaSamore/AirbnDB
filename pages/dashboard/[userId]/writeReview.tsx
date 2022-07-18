@@ -29,13 +29,13 @@ const WriteReview: NextPage<PageProps> = (props: PageProps) => {
                 </div>
                 <div className="overflow-x-auto mt-8">
                     <table className="table no-scrollbar overflow-x-auto w-3/4">
-                    <thead>
-                        <tr className="text-center">
-                            <th className="bg-dark-mode-2">Recensione</th>
-                            <th className="bg-dark-mode-2">Soggiorno</th>
-                            <th className="bg-dark-mode-2">Data inizio soggiorno</th>
-                            <th className="bg-dark-mode-2">Data fine soggiorno</th>
-                        </tr>
+                        <thead>
+                            <tr className="text-center">
+                                <th className="bg-dark-mode-2">Recensione</th>
+                                <th className="bg-dark-mode-2">Soggiorno</th>
+                                <th className="bg-dark-mode-2">Data inizio soggiorno</th>
+                                <th className="bg-dark-mode-2">Data fine soggiorno</th>
+                            </tr>
                         </thead>
                         <tbody>
                             {

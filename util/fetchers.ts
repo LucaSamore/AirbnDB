@@ -221,6 +221,22 @@ export async function getAccommodationsByUserId(id: string | undefined) {
                 Incluso: true
             }
         }),
+        serviziNonInclusi: await prisma.annunci_servizi.findMany({
+            where: {
+                AND: [
+                    {
+                        CodiceAnnuncio: a.CodiceAlloggio
+                    },
+                    {
+                        Incluso: false
+                    }
+                ]
+            },
+            select: {
+                NomeServizio: true,
+                Incluso: true
+            }
+        }),
         regole: (await prisma.annunci_regole.findMany({
             where: {
                 CodiceAnnuncio: a.CodiceAlloggio
@@ -241,6 +257,26 @@ export async function getAccommodationsByUserId(id: string | undefined) {
             where: {
                 CodiceAnnuncio: a.CodiceAlloggio
             }
+        }),
+        luogo: await prisma.luoghi.findUnique({
+            where: {
+                CodiceAlloggio: a.CodiceAlloggio
+            },
+            select: {
+                Via: true,
+                Civico: true,
+                CAP: true,
+                Citta: true,
+                Stato: true
+            }
         })
     }))
+}
+
+export async function getCities() {
+    return await prisma.citta.findMany()
+}
+
+export async function getCountries() {
+    return await prisma.stati.findMany()
 }
