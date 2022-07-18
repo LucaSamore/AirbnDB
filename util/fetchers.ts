@@ -249,7 +249,7 @@ export async function getAccommodationsByUserId(id: string | undefined) {
                 }
             }
         })).map(r => ({
-            CodiceRegola: r.CodiceRegola,
+            Codice: r.CodiceRegola,
             Descrizione: r.regole.Descrizione,
             Tipologia: r.regole.Tipologia
         })),

@@ -14,19 +14,25 @@ export default async function handler(
             res.status(400).json({ message: 'Bad Request' })
     }
 
-    const saved = await prisma.prenotazioni.update({
-        where: {
-            Codice: data.id
-        },
-        data: {
-            DataInizioSoggiorno: data.checkIn,
-            DataFineSoggiorno: data.checkOut,
-            NumeroAdulti: data.adults,
-            NumeroBambini: data.children,
-            NumeroNeonati: data.infants,
-            NumeroAnimali: data.animals
-        }
-    })
+    try {
+        const saved = await prisma.prenotazioni.update({
+            where: {
+                Codice: data.id
+            },
+            data: {
+                DataInizioSoggiorno: data.checkIn,
+                DataFineSoggiorno: data.checkOut,
+                NumeroAdulti: data.adults,
+                NumeroBambini: data.children,
+                NumeroNeonati: data.infants,
+                NumeroAnimali: data.animals
+            }
+        })
 
-    res.status(200).json({saved: saved})
+        res.status(200).json({saved: saved})
+         
+    } catch(err) {
+        console.error(err)
+        res.status(500).send("Internal server error")
+    }
 }

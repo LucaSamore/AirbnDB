@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { AnnuncioServizio, Citta, EditAnnuncio, LoggedUser, Regola, Servizio, Stato } from '../util/types'
+import { AnnuncioServizio, Citta, EditAnnuncio, LoggedUser, Regola, Servizio, Stato, Immagine } from '../util/types';
 
 interface ComponentProps {
     loggedUser: LoggedUser,
@@ -10,7 +10,7 @@ interface ComponentProps {
 }
 
 const sendData = async (data: any) => {
-    const res = await fetch('/api/upload', {
+    const res = await fetch('/api/modifyAccommodation', {
         method: 'POST',
         body: JSON.stringify(data)
     })
@@ -230,7 +230,7 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
                                 props.accommodation.regole.map((r, key) => {
                                     return(
                                         <label key={key} className="label">
-                                            <span className="label-text text-white text-sm py-2 font-quicksand pr-2">{r.Descrizione}</span>
+                                            <span className="label-text text-white text-sm py-2 font-quicksand pr-2">{r.Codice}</span>
                                             <input type="checkbox" defaultChecked className="toggle" onClick={() => {
                                                 const old = selectedRules
 
@@ -265,6 +265,7 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
                         onClick={async () => {
                             try {
                                 const res = await sendData({
+                                    id: props.accommodation.Codice,
                                     available: available,
                                     title: title,
                                     description: description,

@@ -17,19 +17,25 @@ export default async function handler(
         res.status(403).send("Email o password non valida!")
     }
 
-    await prisma.clienti.create({
-        data: {
-            Codice: uuid(),
-            Nome: req.body.name,
-            Cognome: req.body.surname,
-            DataNascita: new Date(req.body.birthDate),
-            DataCreazione: new Date(),
-            Email: req.body.email,
-            Password: await hashPassword(req.body.password),
-            Telefono: req.body.phoneNumber && validatePhoneNumber(req.body.phoneNumber) ? req.body.phoneNumber : null,
-            CodiceHost: null
-        }
-    })
-    
-    res.redirect('/')
+    try {
+        await prisma.clienti.create({
+            data: {
+                Codice: uuid(),
+                Nome: req.body.name,
+                Cognome: req.body.surname,
+                DataNascita: new Date(req.body.birthDate),
+                DataCreazione: new Date(),
+                Email: req.body.email,
+                Password: await hashPassword(req.body.password),
+                Telefono: req.body.phoneNumber && validatePhoneNumber(req.body.phoneNumber) ? req.body.phoneNumber : null,
+                CodiceHost: null
+            }
+        })
+
+        res.redirect('/')
+        
+    } catch(err) {
+        console.error(err)
+        res.status(500).send("Internal server error")
+    }
 }
