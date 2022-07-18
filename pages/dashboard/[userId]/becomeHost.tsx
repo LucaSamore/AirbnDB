@@ -34,7 +34,7 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
   return (
     <>
         <Head>
-            <title> AirbnDB - Dashboard </title>
+            <title> AirbnDB - Diventa Host </title>
             <link rel="icon" href="/airbnDB.ico" />
         </Head>
         <section className="flex flex-row justify-end">

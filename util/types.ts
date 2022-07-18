@@ -117,7 +117,7 @@ export interface AnnuncioAlloggio extends Annuncio {
 }
 
 interface AnnuncioConVotoMedio extends Annuncio {
-    MediaRecensioni: number,
+    MediaRecensioni: number | null,
     Immagine: string
 }
 

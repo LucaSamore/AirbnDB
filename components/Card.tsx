@@ -19,7 +19,7 @@ const Card: React.FC<AnnuncioCard> = (props: AnnuncioCard) => {
             <figure><AdvancedImage cldImg={image} /></figure>
             <div className="card-body">
                 <h2 className="card-title">{props.Titolo}</h2>
-                <p><b>Voto medio:</b> {props.MediaRecensioni.toFixed(1)}</p>
+                <p><b>Voto medio:</b> {props.MediaRecensioni?.toFixed(1)}</p>
                 <p><b>{props.PrezzoPerNotte}€</b> /notte</p>
                 <div className="card-actions justify-end">
                     <Link href={`/annunci/${encodeURIComponent(props.CodiceAlloggio)}`}>

@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { SearchIcon } from "@heroicons/react/solid"
-import { LoggedUser } from "../util/types";
 
 interface ComponentProps {
     userId: string
 }
 
 const Header: React.FC<ComponentProps> = (props: ComponentProps) => {
+    const [search, setSearch] = useState<string>("all")
+
     return (
         <header className="flex justify-between items-center py-5 px-10 bg-dark-mode-2">
             <Link href="/">
@@ -22,8 +23,12 @@ const Header: React.FC<ComponentProps> = (props: ComponentProps) => {
                 </div>
             </Link>
             <div className="flex items-center md:border-2 rounded-full py-2 md:shadow-sm">
-                <input type="text" placeholder="Cerca un alloggio" className="flex-grow pl-5 bg-transparent outline-none text-sm text-white placeolder-gray-400"/>
-                <SearchIcon className="hidden md:inline-flex h-8 text-white rounded-full bg-red-500 p-2 cursor-pointer md:mx-2" />
+                <input type="text" placeholder="Inserisci una località" className="flex-grow pl-5 bg-transparent outline-none text-sm text-white placeolder-gray-400" onChange={(e) => setSearch(e.target.value)}/>
+                <Link href={`/search/${search}`}>
+                    <a>
+                        <SearchIcon className="hidden md:inline-flex h-8 text-white rounded-full bg-red-500 p-2 cursor-pointer md:mx-2" />
+                    </a>
+                </Link>
             </div>
             <div className="flex items-center space-x-2 p-2">
                 <Link href="/register">

@@ -42,7 +42,7 @@ interface PageProps {
     paymentMethods: MetodoPagamento[]
 }
 
-const getTotalCost = (checkIn: Date, checkOut: Date, costPerNight: number) => {
+const getTotalCost = (checkIn: Date, checkOut: Date, accommodation: AnnuncioAlloggio) => {
 
     if(checkIn.getTime() < new Date().getTime() || 
         checkOut.getTime() < new Date().getTime() || 
@@ -50,7 +50,7 @@ const getTotalCost = (checkIn: Date, checkOut: Date, costPerNight: number) => {
             return 0
         }
 
-    return ((checkOut.getTime() - checkIn.getTime())/(1000 * 3600 * 24)) * costPerNight
+    return (((checkOut.getTime() - checkIn.getTime())/(1000 * 3600 * 24)) * accommodation.PrezzoPerNotte) + accommodation.CostoPulizia + accommodation.CostoServizio + accommodation.Tasse
 }
 
 const sendMessage = async (message: string, clientId: string, hostId: string) => {
@@ -149,6 +149,22 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero letti</span>
                             <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroLetti}</span>
                         </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Prezzo per notte</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">€ {props.accommodation.PrezzoPerNotte}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Costo servizio</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">€ {props.accommodation.CostoServizio}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Costo pulizia</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">€ {props.accommodation.CostoPulizia}</span>
+                        </label>
+                        <label className="label">
+                            <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Tasse</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">€ {props.accommodation.Tasse}</span>
+                        </label>
                     </div>
                 </div> 
                 <div className="grid flex-grow h-auto card bg-dark-mode-2 rounded-box place-items-center">
@@ -236,7 +252,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         <label className="label">
                             <span className="label-text text-white text-lg py-2 font-quicksand">Prezzo finale</span>
                             <span className="label-text text-white text-lg py-2 font-quicksand pr-4">€ {
-                                getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte)
+                                getTotalCost(checkIn, checkOut, props.accommodation)
                             }</span>
                         </label>
                         <button className="ml-auto w-1/2 px-6
@@ -255,8 +271,8 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                                     numberOfAnimals: numberOfAnimals,
                                     paymentMethod: paymentMethod,
                                     discountCode: discountCode,
-                                    totalCost: discountCode === null ? getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) 
-                                                                    : (getTotalCost(checkIn, checkOut, props.accommodation.PrezzoPerNotte) * ((100 - discountCode.Percentuale) / 100)).toFixed(2),
+                                    totalCost: discountCode === null ? getTotalCost(checkIn, checkOut, props.accommodation) 
+                                                                    : (getTotalCost(checkIn, checkOut, props.accommodation) * ((100 - discountCode.Percentuale) / 100)).toFixed(2),
                                     clientId: props.loggedUser.Codice,
                                     accommodationId: props.accommodation.CodiceAlloggio,
                                     hostId: props.hosts[0].CodiceCliente
