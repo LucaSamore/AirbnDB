@@ -186,3 +186,5 @@ interface ExtendedAnnuncio extends Alloggio, Annuncio {
 }
 
 export type EditAnnuncio = Omit<ExtendedAnnuncio, "CodiceAlloggio">
+
+export type RandomClient = Pick<Cliente, "Codice" | "Nome" | "Cognome" | "Email">

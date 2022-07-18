@@ -1,12 +1,14 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { loggedUser } from '../../../util/loggedUser'
-import { LoggedUser } from '../../../util/types'
+import { LoggedUser, RandomClient } from '../../../util/types'
 import SideMenu from '../../../components/SideMenu'
 import { useState } from 'react'
+import { getAllNonHostUsers } from '../../../util/fetchers'
 
 interface PageProps {
     loggedUser: LoggedUser,
+    randomNonHostUser: RandomClient
 }
 
 const sendData = async (data: any) => {
@@ -40,6 +42,7 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
             <section className="basis-3/4 px-12">
                 <h1 className="text-white font-bold font-quicksand text-7xl mt-16">Diventa un host</h1>
                 <div className="w-3/4 mt-8">
+                    <p className="font-quicksand text-white text-xl">Utente: {props.randomNonHostUser.Nome} {props.randomNonHostUser.Cognome} {props.randomNonHostUser.Email}</p>
                     <p className="font-quicksand text-white text-xl">Inserisci le seguenti informazioni per potenziare il tuo account e diventare membro della host family 🥰 </p>
                 </div>
                 <div className="overflow-x-auto mt-8">
@@ -98,6 +101,7 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
                             text-white font-quicksand" onClick={async () => {
                                 try {
                                     await sendData({
+                                        id: props.randomNonHostUser.Codice,
                                         bio: bio,
                                         iban: iban,
                                         documentType: documentType,
@@ -121,9 +125,9 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async(context) => {
-    const { id } = context.query
+export const getServerSideProps: GetServerSideProps = async() => {
     const user = await loggedUser()
+    const notYetHost = await getAllNonHostUsers()
 
     return {
         props: {
@@ -134,6 +138,7 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
                 Email: user?.Email,
                 CodiceHost: user?.CodiceHost
             },
+            randomNonHostUser: notYetHost[Math.floor(Math.random() * notYetHost.length)]
         }
     }
 }

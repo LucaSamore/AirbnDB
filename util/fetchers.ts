@@ -284,3 +284,17 @@ export async function getCities() {
 export async function getCountries() {
     return await prisma.stati.findMany()
 }
+
+export async function getAllNonHostUsers() {
+    return await prisma.clienti.findMany({
+        where: {
+            CodiceHost: null
+        },
+        select: {
+            Codice: true,
+            Nome: true,
+            Cognome: true,
+            Email: true
+        }
+    })
+}
