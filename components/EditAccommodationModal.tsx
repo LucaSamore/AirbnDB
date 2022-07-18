@@ -6,7 +6,8 @@ interface ComponentProps {
     loggedUser: LoggedUser,
     accommodation: EditAnnuncio,
     cities: Citta[],
-    countries: Stato[]
+    countries: Stato[],
+    allRules: Regola[]
 }
 
 const sendData = async (data: any) => {
@@ -227,11 +228,11 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
                     <label className="label">
                         <div className="w-full flex flex-col">
                             {
-                                props.accommodation.regole.map((r, key) => {
+                                props.allRules.map((r, key) => {
                                     return(
                                         <label key={key} className="label">
-                                            <span className="label-text text-white text-sm py-2 font-quicksand pr-2">{r.Codice}</span>
-                                            <input type="checkbox" defaultChecked className="toggle" onClick={() => {
+                                            <span className="label-text text-white text-sm py-2 font-quicksand pr-2">{r.Descrizione}</span>
+                                            <input type="checkbox" defaultChecked={props.accommodation.regole.map(r => r.Codice).includes(r.Codice)} className="toggle" onClick={() => {
                                                 const old = selectedRules
 
                                                 if (old.has(r)) {

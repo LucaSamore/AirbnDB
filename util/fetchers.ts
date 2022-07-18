@@ -89,6 +89,10 @@ export async function getRules(id: number) {
     })
 }
 
+export async function getAllRules() {
+    return await prisma.regole.findMany()
+}
+
 export async function getImages(id:number) {
     return await prisma.immagini.findMany({
         where: {

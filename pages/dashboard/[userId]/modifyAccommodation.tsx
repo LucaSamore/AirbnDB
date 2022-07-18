@@ -1,16 +1,17 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { loggedUser } from '../../../util/loggedUser'
-import { LoggedUser, EditAnnuncio, Citta, Stato } from '../../../util/types';
+import { LoggedUser, EditAnnuncio, Citta, Stato, Regola } from '../../../util/types';
 import SideMenu from '../../../components/SideMenu'
-import { getAccommodationsByUserId, getCities, getCountries } from '../../../util/fetchers'
+import { getAccommodationsByUserId, getAllRules, getCities, getCountries } from '../../../util/fetchers'
 import EditAccommodationModal from '../../../components/EditAccommodationModal';
 
 interface PageProps {
     loggedUser: LoggedUser,
     accommodations: EditAnnuncio[],
     cities: Citta[],
-    countries: Stato[]
+    countries: Stato[],
+    allRules: Regola[]
 }
 
 const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
@@ -44,7 +45,11 @@ const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
                                 props.accommodations.map((a, key) => {
                                     return (
                                         <tr key={key} className="text-center">
-                                            <th className="bg-dark-mode-3"><EditAccommodationModal loggedUser={props.loggedUser} accommodation={a} cities={props.cities} countries={props.countries} /></th>
+                                            <th className="bg-dark-mode-3"><EditAccommodationModal loggedUser={props.loggedUser} 
+                                                                                                     accommodation={a} 
+                                                                                                     cities={props.cities} 
+                                                                                                     countries={props.countries}
+                                                                                                     allRules={props.allRules} /></th>
                                             <td className="bg-dark-mode-3">{a.Titolo}</td>
                                             <td className="bg-dark-mode-3">{a.Tipologia}</td>
                                             <td className="bg-dark-mode-3">{a.NumeroOspitabili}</td>
@@ -68,7 +73,9 @@ export const getServerSideProps: GetServerSideProps = async() => {
     const accommodations = await Promise.all(await getAccommodationsByUserId(user?.Codice))
     const cities = await getCities()
     const countries = await getCountries()
-    console.log(accommodations[0])
+    const allRules = await getAllRules()
+
+    console.log(allRules)
 
     return {
         props: {
@@ -81,7 +88,8 @@ export const getServerSideProps: GetServerSideProps = async() => {
             },
             accommodations: accommodations,
             cities: cities,
-            countries: countries
+            countries: countries,
+            allRules: allRules
         }
     }
 }

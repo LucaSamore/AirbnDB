@@ -60,12 +60,14 @@ export default async function handler(
       await prisma.$queryRaw`DELETE FROM annunci_regole WHERE CodiceAnnuncio = ${data.id}`
 
       data.rules.forEach(async (r: number) => {
-        await prisma.annunci_regole.create({
-          data: {
-            CodiceAnnuncio: data.id,
-            CodiceRegola: r
-          }
-        })
+        // await prisma.annunci_regole.create({
+        //   data: {
+        //     CodiceAnnuncio: data.id,
+        //     CodiceRegola: r
+        //   }
+        // })
+        
+        await prisma.$queryRaw`INSERT INTO annunci_regole (CodiceAnnuncio, CodiceRegola) VALUES (${data.id}, ${r})`
       })
 
       if(!data.images.every((i: any) => i === null)) {
