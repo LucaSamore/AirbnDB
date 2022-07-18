@@ -36,7 +36,7 @@ const Home: NextPage<PageProps> = (props: PageProps) => {
         <h2 className="px-16 pt-12 font-quicksand font-bold text-4xl text-white">Travel like a human</h2>
         <p className="px-16 pb-12 font-quicksand text-xl text-white">Ecco gli alloggi maggiormente apprezzati dai nostri utenti</p>
 
-        <section className="grid lg:grid-cols-3 md:grid-cols-1 justify-items-center gap-10">
+        <section className="grid lg:grid-cols-3 md:grid-cols-1 justify-items-center gap-6 md:justify-between">
           {
             props.annunci.map((a, key) => {
               return (
