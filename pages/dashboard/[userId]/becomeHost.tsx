@@ -1,14 +1,15 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { loggedUser } from '../../../util/loggedUser'
-import { LoggedUser, RandomClient } from '../../../util/types'
+import { Lingua, LoggedUser, RandomClient } from '../../../util/types'
 import SideMenu from '../../../components/SideMenu'
 import { useState } from 'react'
-import { getAllNonHostUsers } from '../../../util/fetchers'
+import { getAllNonHostUsers, getLanguages } from '../../../util/fetchers'
 
 interface PageProps {
     loggedUser: LoggedUser,
-    randomNonHostUser: RandomClient
+    randomNonHostUser: RandomClient,
+    languages: Lingua[]
 }
 
 const sendData = async (data: any) => {
@@ -30,6 +31,7 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
   const [documentType, setDocumentType] = useState<string>("")
   const [documentId, setDocumentId] = useState<string>("")
   const [documentExpirationDate, setDocumentExpirationDate] = useState<Date>(new Date())
+  const [selectedLanguages, setSelectedLanguages] = useState<Set<Lingua>>(new Set())
 
   return (
     <>
@@ -94,20 +96,74 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
                             </td>
                         </tr>
                         <tr>
+                            <td className="bg-dark-mode-3 text-center">Lingue parlate</td>
+                            <td className="bg-dark-mode-3">
+                            <label htmlFor="languages" className="btn modal-button w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none font-quicksand text-white">Seleziona lingue</label>
+                                <input type="checkbox" id="languages" className="modal-toggle" />
+                                <div className="modal">
+                                    <div className="modal-box w-full no-scrollbar overflow-y-auto bg-dark-mode-3">
+                                        <label htmlFor="languages" className="btn btn-sm btn-circle absolute right-5 top-5 bg-dark-mode-2 border-none">✕</label>
+                                        <h3 className="font-bold text-xl py-2">Seleziona le lingue che conosci</h3>
+                                        {
+                                            props.languages.map((l, key) => {
+                                                return (
+                                                    <div key={key} className="form-control">
+                                                        <label className="cursor-pointer label w-auto max-h-full">
+                                                            <span className="label-text text-white text-lg">{l.Nome}</span>
+                                                            <input type="checkbox" className="toggle" onClick={() => {
+                                                                        const old = selectedLanguages
+
+                                                                        if (old.has(l)) {
+                                                                            old.delete(l)
+                                                                        } else {
+                                                                            old.add(l)
+                                                                        }
+
+                                                                        setSelectedLanguages(old)
+                                                                    }
+                                                                } />
+                                                        </label>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                        <div className="modal-action">
+                                            <label htmlFor="languages" className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand">Conferma</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td className="bg-dark-mode-3 text-center">Invia dati</td>
                             <td className="bg-dark-mode-3">
                             <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg 
                             w-1/2 bg-gradient-to-r from-red-500 to-pink-500 border-none 
                             text-white font-quicksand" onClick={async () => {
                                 try {
-                                    await sendData({
+
+                                    if(bio === "" || 
+                                        iban === "" || 
+                                        documentType === "" || 
+                                        documentType === "" ||
+                                        selectedLanguages.size === 0) {
+                                            alert("Compila tutti i campi!")
+                                            return
+                                        }
+
+                                    const res = await sendData({
                                         id: props.randomNonHostUser.Codice,
                                         bio: bio,
                                         iban: iban,
                                         documentType: documentType,
                                         documentId: documentId,
-                                        documentExpirationDate: documentExpirationDate
+                                        documentExpirationDate: documentExpirationDate,
+                                        languages: Array.from(selectedLanguages).map(l => l.Nome)
                                     })
+
+                                    if(res) {
+                                        alert("Benvenuto tra gli host!")
+                                    }
 
                                 } catch(err) {
                                     console.error(err)
@@ -128,6 +184,7 @@ const BecomeHost: NextPage<PageProps> = (props: PageProps) => {
 export const getServerSideProps: GetServerSideProps = async() => {
     const user = await loggedUser()
     const notYetHost = await getAllNonHostUsers()
+    const languages = await getLanguages()
 
     return {
         props: {
@@ -138,7 +195,8 @@ export const getServerSideProps: GetServerSideProps = async() => {
                 Email: user?.Email,
                 CodiceHost: user?.CodiceHost
             },
-            randomNonHostUser: notYetHost[Math.floor(Math.random() * notYetHost.length)]
+            randomNonHostUser: notYetHost[Math.floor(Math.random() * notYetHost.length)],
+            languages: languages
         }
     }
 }

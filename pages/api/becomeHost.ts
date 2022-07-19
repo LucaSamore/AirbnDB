@@ -37,6 +37,15 @@ export default async function handler(
             }
         })
 
+        data.languages.forEach(async (l: string) => {
+            await prisma.host_lingue.create({
+                data: {
+                    CodiceHost: data.id,
+                    Lingua: l
+                }
+            })
+        })
+
         res.json({msg: "Host registrato con successo!", data: {...newHost, ...updatedClient}})
 
     } catch(err) {
