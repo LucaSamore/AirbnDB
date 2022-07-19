@@ -50,11 +50,11 @@ const ModifyAccommodation: NextPage<PageProps> = (props: PageProps) => {
                                                                                                      cities={props.cities} 
                                                                                                      countries={props.countries}
                                                                                                      allRules={props.allRules} /></th>
-                                            <td className="bg-dark-mode-3">{a.Titolo}</td>
+                                            <td className="bg-dark-mode-3">{a.Annuncio.Titolo}</td>
                                             <td className="bg-dark-mode-3">{a.Tipologia}</td>
                                             <td className="bg-dark-mode-3">{a.NumeroOspitabili}</td>
-                                            <td className="bg-dark-mode-3">€ {a.PrezzoPerNotte}</td>
-                                            <td className="bg-dark-mode-3">{a.Disponibile ? "SI" : "NO"}</td>
+                                            <td className="bg-dark-mode-3">€ {a.Annuncio.PrezzoPerNotte}</td>
+                                            <td className="bg-dark-mode-3">{a.Annuncio.Disponibile ? "SI" : "NO"}</td>
                                         </tr>
                                     )
                                 })
@@ -74,8 +74,6 @@ export const getServerSideProps: GetServerSideProps = async() => {
     const cities = await getCities()
     const countries = await getCountries()
     const allRules = await getAllRules()
-
-    console.log(allRules)
 
     return {
         props: {

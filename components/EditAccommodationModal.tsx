@@ -24,9 +24,9 @@ const sendData = async (data: any) => {
 }
 
 const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps) => {
-    const [available, setAvailable] = useState<boolean>(props.accommodation.Disponibile)
-    const [title, setTitle] = useState<string>(props.accommodation.Titolo)
-    const [description, setDescription] = useState<string>(props.accommodation.Descrizione)
+    const [available, setAvailable] = useState<boolean>(props.accommodation.Annuncio.Disponibile)
+    const [title, setTitle] = useState<string>(props.accommodation.Annuncio.Titolo)
+    const [description, setDescription] = useState<string>(props.accommodation.Annuncio.Descrizione)
     const [type, setType] = useState<string>(props.accommodation.Tipologia)
     const [street, setStreet] = useState<string>(props.accommodation.luogo.Via)
     const [houseNumber, setHouseNumber] = useState<number>(props.accommodation.luogo.Civico)
@@ -37,10 +37,10 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
     const [numberOfBathrooms, setNumberOfBathrooms] = useState<number>(props.accommodation.NumeroBagni)
     const [numberOfBedrooms, setNumberOfBedrooms] = useState<number>(props.accommodation.NumeroCamereLetto)
     const [numberOfBeds, setNumberOfBeds] = useState<number>(props.accommodation.NumeroLetti)
-    const [costPerNight, setCostPerNight] = useState<number>(props.accommodation.PrezzoPerNotte)
-    const [serviceCost, setServiceCost] = useState<number>(props.accommodation.CostoServizio)
-    const [cleaningCost, setCleaningCost] = useState<number>(props.accommodation.CostoPulizia)
-    const [tax, setTax] = useState<number>(props.accommodation.Tasse)
+    const [costPerNight, setCostPerNight] = useState<number>(props.accommodation.Annuncio.PrezzoPerNotte)
+    const [serviceCost, setServiceCost] = useState<number>(props.accommodation.Annuncio.CostoServizio)
+    const [cleaningCost, setCleaningCost] = useState<number>(props.accommodation.Annuncio.CostoPulizia)
+    const [tax, setTax] = useState<number>(props.accommodation.Annuncio.Tasse)
     const [selectedServices, setSelectedServices] = useState<Set<Omit<AnnuncioServizio, "CodiceAnnuncio">>>(new Set(props.accommodation.servizi))
     const [notIncludedServices, setNotIncludedServices] = useState<Set<Omit<AnnuncioServizio, "CodiceAnnuncio">>>(new Set(props.accommodation.serviziNonInclusi))
     const [selectedRules, setSelectedRules] = useState<Set<Regola>>(new Set(props.accommodation.regole))
@@ -72,12 +72,12 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
   
     return (
         <>
-        <label htmlFor={`modify-accommodation-${props.accommodation.Codice}`} className="btn modal-button rounded-full bg-transparent hover:bg-red-500 text-xl border-none">✏</label>
+        <label htmlFor={`modify-accommodation-${props.accommodation.Annuncio.CodiceAlloggio}`} className="btn modal-button rounded-full bg-transparent hover:bg-red-500 text-xl border-none">✏</label>
 
-        <input type="checkbox" id={`modify-accommodation-${props.accommodation.Codice}`} className="modal-toggle" />
+        <input type="checkbox" id={`modify-accommodation-${props.accommodation.Annuncio.CodiceAlloggio}`} className="modal-toggle" />
         <div className="modal">
             <div className="modal-box w-11/12 max-w-2xl no-scrollbar overflow-y-auto bg-dark-mode-3">
-                <label htmlFor={`modify-accommodation-${props.accommodation.Codice}`} className="btn btn-sm btn-circle absolute right-5 top-5 bg-dark-mode-2 border-none">✕</label>
+                <label htmlFor={`modify-accommodation-${props.accommodation.Annuncio.CodiceAlloggio}`} className="btn btn-sm btn-circle absolute right-5 top-5 bg-dark-mode-2 border-none">✕</label>
                 <h3 className="font-bold text-xl py-2 text-white font-quicksand">Modifica annuncio</h3>
                 <div className="form-control mt-4">
                     <label className="label">
@@ -262,11 +262,11 @@ const EditAccommodationModal: React.FC<ComponentProps> = (props: ComponentProps)
                     
                 </div>
                 <div className="modal-action">
-                    <label htmlFor={`modify-accommodation-${props.accommodation.Codice}`} className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand"
+                    <label htmlFor={`modify-accommodation-${props.accommodation.Annuncio.CodiceAlloggio}`} className="btn bg-gradient-to-r from-red-500 to-pink-500 border-none text-white font-quicksand"
                         onClick={async () => {
                             try {
                                 const res = await sendData({
-                                    id: props.accommodation.Codice,
+                                    id: props.accommodation.Annuncio.CodiceAlloggio,
                                     available: available,
                                     title: title,
                                     description: description,

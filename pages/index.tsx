@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const user = await loggedUser()
   const stays = await prisma.annunci.findMany({
     where: {
-      Disponibile: true,
+      Disponibile: 1,
     },
     include: {
       recensioni: true,

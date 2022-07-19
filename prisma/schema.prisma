@@ -14,6 +14,7 @@ model alloggi {
   NumeroBagni       Int            @db.TinyInt
   NumeroCamereLetto Int            @db.TinyInt
   NumeroLetti       Int            @db.TinyInt
+  annunci           annunci?
   luoghi            luoghi?
   possedimenti      possedimenti[]
 }
@@ -27,6 +28,7 @@ model annunci {
   CostoServizio   Decimal           @db.Decimal(10, 2)
   CostoPulizia    Decimal           @db.Decimal(10, 2)
   Tasse           Decimal           @db.Decimal(10, 2)
+  alloggi         alloggi           @relation(fields: [CodiceAlloggio], references: [Codice], onDelete: NoAction, onUpdate: NoAction, map: "FK_Annuncio_Alloggio")
   annunci_regole  annunci_regole[]
   annunci_servizi annunci_servizi[]
   immagini        immagini[]

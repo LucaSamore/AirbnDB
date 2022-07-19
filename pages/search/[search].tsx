@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = await loggedUser()
   const stays = await prisma.annunci.findMany({
     where: {
-      Disponibile: true,
+      Disponibile: 1,
     },
     include: {
       recensioni: true,

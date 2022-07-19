@@ -32,7 +32,7 @@ export default async function handler(
             CodiceAlloggio: savedStay.Codice,
             Titolo: toBeSaved.title,
             Descrizione: toBeSaved.description,
-            Disponibile: true,
+            Disponibile: 1,
             PrezzoPerNotte: toBeSaved.costPerNight,
             CostoServizio: toBeSaved.serviceCost,
             CostoPulizia: toBeSaved.cleaningCost,
@@ -75,7 +75,7 @@ export default async function handler(
             data: {
                 CodiceAnnuncio: saved.CodiceAlloggio,
                 NomeServizio: s,
-                Incluso: true
+                Incluso: 1
             }
         })
     })
@@ -85,7 +85,7 @@ export default async function handler(
             data: {
                 CodiceAnnuncio: saved.CodiceAlloggio,
                 NomeServizio: s,
-                Incluso: false
+                Incluso: 0
             }
         })
     })

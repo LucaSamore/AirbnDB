@@ -113,7 +113,11 @@ export interface Alloggio {
 }
 
 export interface AnnuncioAlloggio extends Annuncio {
-    alloggi: Alloggio
+    Tipologia: string,
+    NumeroOspitabili: number,
+    NumeroBagni: number,
+    NumeroCamereLetto: number,
+    NumeroLetti: number
 }
 
 interface AnnuncioConVotoMedio extends Annuncio {
@@ -177,7 +181,8 @@ export interface Immagine {
     CodiceAnnuncio: number
 }
 
-interface ExtendedAnnuncio extends Alloggio, Annuncio {
+interface ExtendedAnnuncio extends Alloggio {
+    Annuncio: Annuncio,
     servizi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
     serviziNonInclusi: Omit<AnnuncioServizio, "CodiceAnnuncio">[],
     regole: Regola[],
@@ -185,6 +190,6 @@ interface ExtendedAnnuncio extends Alloggio, Annuncio {
     luogo: Omit<Luogo, "CodiceAlloggio">
 }
 
-export type EditAnnuncio = Omit<ExtendedAnnuncio, "CodiceAlloggio">
+export type EditAnnuncio = Omit<ExtendedAnnuncio, "Codice">
 
 export type RandomClient = Pick<Cliente, "Codice" | "Nome" | "Cognome" | "Email">

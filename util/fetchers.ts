@@ -1,14 +1,24 @@
 import { prisma } from './db'
 
 export async function getAccommodation(id: number) {
-    return await prisma.annunci.findUnique({
-        where: {
-            CodiceAlloggio: id
-        },
-        include: {
-            alloggi: true
-        }
-    }) 
+    return { ...await prisma.annunci.findUnique({
+            where: {
+                CodiceAlloggio: id
+            }
+        }),
+        ...await prisma.alloggi.findUnique({
+            where: {
+                Codice: id
+            },
+            select: {
+                Tipologia: true,
+                NumeroOspitabili: true,
+                NumeroBagni: true,
+                NumeroCamereLetto: true,
+                NumeroLetti: true
+            }
+        })
+    }
 }
 
 export async function getAccommodationHosts(id: number) {
@@ -157,7 +167,16 @@ export async function getPaymentMethods() {
 export async function getReviewables(userId: string | undefined) {
     return (await prisma.prenotazioni.findMany({
         where: {
-            CodiceCliente: userId
+            AND: [
+                {
+                    CodiceCliente: userId
+                },
+                {
+                    DataFineSoggiorno: {
+                        lte: new Date()
+                    }
+                }
+            ]
         },
         include: {
             recensioni: true
@@ -197,8 +216,13 @@ export async function getAccommodationsByUserId(id: string | undefined) {
         },
         include: {
             alloggi: {
-                include: {
-                    annunci: true
+                select: {
+                    Codice: true,
+                    Tipologia: true,
+                    NumeroOspitabili: true,
+                    NumeroBagni: true,
+                    NumeroCamereLetto: true,
+                    NumeroLetti: true
                 }
             }
         }
@@ -209,13 +233,21 @@ export async function getAccommodationsByUserId(id: string | undefined) {
         NumeroBagni: a.alloggi.NumeroBagni,
         NumeroCamereLetto: a.alloggi.NumeroCamereLetto,
         NumeroLetti: a.alloggi.NumeroLetti,
-        Titolo: a.alloggi.annunci?.Titolo,
-        Descrizione: a.alloggi.annunci?.Descrizione,
-        Disponibile: a.alloggi.annunci?.Disponibile,
-        PrezzoPerNotte: a.alloggi.annunci?.PrezzoPerNotte.toNumber(),
-        CostoServizio: a.alloggi.annunci?.CostoServizio.toNumber(),
-        CostoPulizia: a.alloggi.annunci?.CostoPulizia.toNumber(),
-        Tasse: a.alloggi.annunci?.Tasse.toNumber(),
+        Annuncio: (await prisma.annunci.findMany({
+            where: {
+                CodiceAlloggio: a.CodiceAlloggio
+            }
+        })).map(a => ({
+            CodiceAlloggio: a.CodiceAlloggio,
+            Titolo: a.Titolo,
+            Descrizione: a.Descrizione,
+            Disponibile: a.Disponibile,
+            PrezzoPerNotte: a.PrezzoPerNotte.toNumber(),
+            CostoServizio: a.CostoServizio.toNumber(),
+            CostoPulizia: a.CostoPulizia.toNumber(),
+            Tasse: a.Tasse.toNumber()
+
+        }))[0],
         servizi: await prisma.annunci_servizi.findMany({
             where: {
                 CodiceAnnuncio: a.CodiceAlloggio
@@ -232,7 +264,7 @@ export async function getAccommodationsByUserId(id: string | undefined) {
                         CodiceAnnuncio: a.CodiceAlloggio
                     },
                     {
-                        Incluso: false
+                        Incluso: 0
                     }
                 ]
             },

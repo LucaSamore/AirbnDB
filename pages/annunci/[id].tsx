@@ -30,6 +30,7 @@ import {
 import { generateDiscountCode } from '../../util/discount'
 import { AdvancedImage } from '@cloudinary/react'
 import {Cloudinary} from "@cloudinary/url-gen"
+import { Prisma } from '@prisma/client'
 interface PageProps {
     loggedUser: LoggedUser
     accommodation: AnnuncioAlloggio,
@@ -127,7 +128,7 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Tipologia alloggio</span>
-                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.Tipologia}</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.Tipologia}</span>
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Indirizzo</span>
@@ -135,19 +136,19 @@ const Accommodation: NextPage<PageProps> = (props: PageProps) => {
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero persone ospitabili</span>
-                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroOspitabili}</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.NumeroOspitabili}</span>
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero bagni</span>
-                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroBagni}</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.NumeroBagni}</span>
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero camere da letto</span>
-                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroCamereLetto}</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.NumeroCamereLetto}</span>
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Numero letti</span>
-                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.alloggi.NumeroLetti}</span>
+                            <span className="label-text text-white text-lg py-2 font-quicksand">{props.accommodation.NumeroLetti}</span>
                         </label>
                         <label className="label">
                             <span className="label-text text-white font-bold text-xl py-2 font-quicksand">Prezzo per notte</span>
@@ -431,6 +432,8 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
     const images = await getImages(parseInt(id as string))
     const paymentMethods = await getPaymentMethods()
 
+    console.log(accommodation)
+
     const hosts: any[] = await Promise.all(accommodationHosts
         .flatMap(ah => ah.possedimenti)
         .flatMap(p => p.host)
@@ -464,14 +467,18 @@ export const getServerSideProps: GetServerSideProps = async(context) => {
             },
             accommodation: {
                 CodiceAlloggio: accommodation?.CodiceAlloggio,
-                PrezzoPerNotte: accommodation?.PrezzoPerNotte.toNumber(),
-                CostoPulizia: accommodation?.CostoPulizia.toNumber(),
-                CostoServizio: accommodation?.CostoServizio.toNumber(),
+                PrezzoPerNotte: (accommodation?.PrezzoPerNotte as Prisma.Decimal).toNumber(),
+                CostoPulizia: (accommodation?.CostoPulizia as Prisma.Decimal).toNumber(),
+                CostoServizio: (accommodation?.CostoServizio as Prisma.Decimal).toNumber(),
                 Descrizione: accommodation?.Descrizione,
                 Disponibile: accommodation?.Disponibile,
                 Titolo: accommodation?.Titolo,
-                Tasse: accommodation?.Tasse.toNumber(),
-                alloggi: accommodation?.alloggi
+                Tasse: (accommodation?.Tasse as Prisma.Decimal).toNumber(),
+                Tipologia: accommodation.Tipologia,
+                NumeroOspitabili: accommodation.NumeroOspitabili,
+                NumeroBagni: accommodation.NumeroBagni,
+                NumeroCamereLetto: accommodation.NumeroCamereLetto,
+                NumeroLetti: accommodation.NumeroLetti
             },
             hosts: hosts,
             reviews: reviews,
